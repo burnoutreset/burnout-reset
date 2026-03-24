@@ -4,186 +4,1087 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Burnout Reset — Free Assessment</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
   <style>
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:Arial,sans-serif;background:#0D0D0D;color:#fff;min-height:100vh}
-    .app{max-width:640px;margin:0 auto;padding:2rem 1rem 4rem}
-    .step{display:none}.step.active{display:block}
-    h1{font-size:2rem;font-weight:700;margin-bottom:.5rem}
-    .sub{font-size:1rem;color:#9CA3AF;line-height:1.6;margin-bottom:1.5rem}
-    .prog{height:3px;background:#1C1C1C;border-radius:2px;margin-bottom:2rem}
-    .prog-fill{height:3px;background:#E8401C;border-radius:2px;transition:width .4s}
-    .q-block{margin-bottom:1.75rem}
-    .q-text{font-size:.95rem;line-height:1.5;margin-bottom:.75rem;color:#E6EDF3;font-style:italic}
-    .scale{display:flex;gap:8px;justify-content:center}
-    .sb{width:40px;height:40px;border-radius:50%;border:1px solid #333;background:transparent;
-        color:#6B7280;font-size:.85rem;cursor:pointer;transition:all .15s;display:flex;
-        align-items:center;justify-content:center}
-    .sb:hover{border-color:#E8401C;color:#E8401C}
-    .sb.sel{background:#E8401C;border-color:#E8401C;color:#fff;font-weight:700}
-    .scale-labels{display:flex;justify-content:space-between;font-size:.7rem;color:#6B7280;margin-top:4px}
-    .emo-group-label{font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
-                     color:#6B7280;margin:1rem 0 .5rem}
-    .emo-grid{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:4px}
-    .emo-chip{padding:6px 14px;border-radius:20px;border:1px solid #333;background:transparent;
-             font-size:.85rem;color:#9CA3AF;cursor:pointer;transition:all .15s}
-    .emo-chip:hover{border-color:#E8401C}
-    .emo-chip.sel{border-color:#E8401C;color:#E8401C;background:#1a0800}
-    .emo-count{font-size:.75rem;color:#6B7280;margin-top:.5rem}
-    .inv-section{margin-bottom:1.75rem}
-    .inv-title{font-size:1rem;font-weight:700;margin-bottom:.25rem}
-    .inv-desc{font-size:.8rem;color:#6B7280;margin-bottom:.75rem}
-    .chips-row{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:.6rem}
-    .sug-chip{padding:4px 10px;border-radius:20px;border:1px dashed #333;background:transparent;
-             font-size:.75rem;color:#6B7280;cursor:pointer;transition:all .15s}
-    .sug-chip:hover{border-color:#6B7280;color:#9CA3AF}
-    .inv-inp{width:100%;padding:8px 12px;background:#161B22;border:1px solid #30363D;
-            border-radius:8px;color:#E6EDF3;font-size:.9rem;margin-bottom:6px;outline:none}
-    .inv-inp:focus{border-color:#E8401C}
-    .inv-inp::placeholder{color:#6B7280;font-style:italic;font-size:.85rem}
-    .wt-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
-    .wt-label{font-size:.85rem;color:#9CA3AF;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-    .wt-pct{font-size:.85rem;font-weight:700;min-width:34px;text-align:right;color:#E6EDF3}
-    .btn{display:inline-flex;align-items:center;gap:6px;padding:10px 22px;border-radius:8px;
-         font-size:.9rem;font-weight:700;cursor:pointer;border:1px solid #333;
-         background:transparent;color:#E6EDF3;transition:all .15s}
-    .btn:hover{border-color:#E8401C;color:#E8401C}
-    .btn-p{background:#E8401C;border-color:#E8401C;color:#fff}
-    .btn-p:hover{background:#c73518;border-color:#c73518;color:#fff}
-    .btn-row{display:flex;gap:10px;margin-top:1.5rem;flex-wrap:wrap}
-    .err{font-size:.8rem;color:#EF4444;margin-top:.5rem}
-    .arc-card{background:#161B22;border:1px solid #30363D;border-radius:12px;padding:1.25rem;margin-bottom:1rem}
-    .arc-badge{display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.1em;
-              text-transform:uppercase;padding:3px 10px;border-radius:20px;margin-bottom:.5rem}
-    .arc-name{font-size:1.4rem;font-weight:700;margin-bottom:.25rem}
-    .arc-tagline{font-size:.9rem;color:#9CA3AF;font-style:italic;margin-bottom:.6rem}
-    .arc-desc{font-size:.85rem;color:#9CA3AF;line-height:1.6}
-    .dim-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1rem}
-    .dim-card{background:#161B22;border-radius:8px;padding:.75rem;border-left:3px solid}
-    .dim-label{font-size:.7rem;color:#6B7280;margin-bottom:3px;text-transform:uppercase;letter-spacing:.07em}
-    .dim-pct{font-size:1.4rem;font-weight:700}
-    .bar-track{height:3px;background:#30363D;border-radius:2px;margin-top:5px}
-    .bar-fill{height:3px;border-radius:2px}
-    .insight{padding:.8rem 1rem;margin-bottom:.75rem;background:#161B22;border-radius:0 8px 8px 0;border-left:3px solid}
-    .insight-t{font-size:.9rem;font-weight:700;margin-bottom:2px}
-    .insight-d{font-size:.82rem;color:#9CA3AF;line-height:1.6}
-    .week-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1rem}
-    .week-card{border:1px solid #30363D;border-radius:8px;padding:10px}
-    .week-n{font-size:.65rem;font-weight:700;text-transform:uppercase;color:#6B7280;margin-bottom:3px}
-    .week-theme{font-size:.85rem;font-weight:700;margin-bottom:2px}
-    .week-focus{font-size:.72rem;color:#6B7280;line-height:1.4}
-    .tech-chip{display:inline-block;padding:3px 10px;border:1px solid #30363D;border-radius:20px;font-size:.75rem;color:#9CA3AF;margin:3px}
-    .arc-score-bar{display:flex;align-items:center;gap:10px;margin-bottom:7px}
-    .arc-score-label{font-size:.82rem;color:#9CA3AF;width:160px;flex-shrink:0}
-    .arc-score-track{flex:1;height:5px;background:#30363D;border-radius:3px;overflow:hidden}
-    .arc-score-fill{height:5px;border-radius:3px}
-    .arc-score-val{font-size:.75rem;color:#6B7280;min-width:28px;text-align:right}
-    .buy-section{background:#161B22;border:1px solid #30363D;border-radius:12px;padding:1.25rem;margin-top:1.5rem}
-    .buy-title{font-size:1.1rem;font-weight:700;margin-bottom:.5rem}
-    .buy-desc{font-size:.85rem;color:#9CA3AF;margin-bottom:1rem;line-height:1.5}
-    .buy-btn{display:block;width:100%;padding:14px;background:#E8401C;border:none;border-radius:8px;
-            color:#fff;font-size:1rem;font-weight:700;cursor:pointer;text-align:center;text-decoration:none}
-    .buy-btn:hover{background:#c73518}
-    hr{border:none;border-top:1px solid #30363D;margin:1.25rem 0}
-    input[type=range]{width:100%;accent-color:#E8401C}
-    @media(max-width:480px){.week-grid{grid-template-columns:1fr 1fr}.dim-grid{grid-template-columns:1fr}}
+    /* ── Reset & tokens ──────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ink:     #090909;
+      --surface: #111113;
+      --card:    #161619;
+      --raised:  #1c1c20;
+      --border:  rgba(255,255,255,0.07);
+      --border2: rgba(255,255,255,0.12);
+      --muted:   #52525b;
+      --dim:     #71717a;
+      --mid:     #a1a1aa;
+      --light:   #d4d4d8;
+      --white:   #fafafa;
+      --red:     #e8401c;
+      --red-d:   #c0340f;
+      --red-bg:  rgba(232,64,28,0.10);
+      --red-glow:rgba(232,64,28,0.18);
+      --teal:    #0d7377;
+      --teal-bg: rgba(13,115,119,0.10);
+      --amber:   #b45309;
+      --amber-bg:rgba(180,83,9,0.10);
+      --purple:  #6d28d9;
+      --purple-bg:rgba(109,40,217,0.10);
+      --blue:    #3b82f6;
+      --blue-bg: rgba(59,130,246,0.10);
+      --green:   #22c55e;
+      --r:       10px;
+      --r-sm:    6px;
+      --r-lg:    16px;
+      --font-d:  'Syne', sans-serif;
+      --font-b:  'DM Sans', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-b);
+      background: var(--ink);
+      color: var(--white);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+
+    /* ── Layout ──────────────────────────────────────────────────── */
+    .app {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 2.5rem 1.25rem 5rem;
+    }
+
+    /* ── Step system ─────────────────────────────────────────────── */
+    .step { display: none; }
+    .step.active {
+      display: block;
+      animation: stepIn 0.35s ease both;
+    }
+    @keyframes stepIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Progress bar ────────────────────────────────────────────── */
+    .prog {
+      height: 2px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 2px;
+      margin-bottom: 2rem;
+      overflow: hidden;
+    }
+    .prog-fill {
+      height: 100%;
+      border-radius: 2px;
+      transition: width 0.5s cubic-bezier(.4,0,.2,1);
+      position: relative;
+    }
+    .prog-fill::after {
+      content: '';
+      position: absolute;
+      right: 0; top: 50%;
+      transform: translateY(-50%);
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: inherit;
+      box-shadow: 0 0 8px currentColor;
+    }
+
+    /* ── Step label ──────────────────────────────────────────────── */
+    .step-label {
+      font-family: var(--font-d);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.35rem;
+    }
+
+    /* ── Typography ──────────────────────────────────────────────── */
+    h1 {
+      font-family: var(--font-d);
+      font-size: 2rem;
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      color: var(--white);
+      margin-bottom: 0.6rem;
+    }
+    h1 em {
+      font-style: normal;
+      color: var(--red);
+    }
+    h1.h1-sm {
+      font-size: 1.35rem;
+      letter-spacing: -0.02em;
+    }
+    h2.section-h {
+      font-family: var(--font-d);
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin: 1.75rem 0 0.4rem;
+      color: var(--white);
+    }
+    .sub {
+      font-size: 0.9rem;
+      font-weight: 300;
+      color: var(--dim);
+      line-height: 1.7;
+      margin-bottom: 1.5rem;
+    }
+
+    /* ── Divider ─────────────────────────────────────────────────── */
+    hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 1.5rem 0;
+    }
+
+    /* ── Step 1 — Intro ──────────────────────────────────────────── */
+    .intro-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-d);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1.25rem;
+    }
+    .intro-eyebrow-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--red);
+      animation: pulse 2.2s ease infinite;
+    }
+    @keyframes pulse {
+      0%,100% { opacity: 1; transform: scale(1); }
+      50%      { opacity: 0.5; transform: scale(0.85); }
+    }
+
+    .intro-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin-bottom: 1.75rem;
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      overflow: hidden;
+    }
+    .intro-step {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      background: var(--card);
+      transition: background 0.2s;
+    }
+    .intro-step:last-child { border-bottom: none; }
+    .intro-step:hover { background: var(--raised); }
+    .intro-step-num {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-d);
+      font-size: 0.7rem;
+      font-weight: 800;
+      flex-shrink: 0;
+      color: white;
+    }
+    .intro-step-body {}
+    .intro-step-title {
+      font-family: var(--font-d);
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--light);
+      margin-bottom: 1px;
+    }
+    .intro-step-desc {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .intro-meta {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+    .meta-pill {
+      padding: 4px 10px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: var(--dim);
+      letter-spacing: 0.03em;
+    }
+
+    /* ── Buttons ─────────────────────────────────────────────────── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 20px;
+      border-radius: var(--r);
+      font-family: var(--font-d);
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: 1px solid var(--border2);
+      background: transparent;
+      color: var(--mid);
+      transition: all 0.18s;
+      letter-spacing: 0.01em;
+    }
+    .btn:hover {
+      border-color: rgba(255,255,255,0.22);
+      color: var(--white);
+      background: rgba(255,255,255,0.04);
+    }
+    .btn-p {
+      background: var(--red);
+      border-color: var(--red);
+      color: white;
+      box-shadow: 0 4px 16px rgba(232,64,28,0.28);
+    }
+    .btn-p:hover {
+      background: var(--red-d);
+      border-color: var(--red-d);
+      color: white;
+      box-shadow: 0 6px 22px rgba(232,64,28,0.38);
+      transform: translateY(-1px);
+    }
+    .btn-full {
+      width: 100%;
+      justify-content: center;
+      padding: 13px 20px;
+      font-size: 0.9rem;
+    }
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 1.75rem;
+      flex-wrap: wrap;
+    }
+    .err {
+      display: none;
+      font-size: 0.78rem;
+      color: #ef4444;
+      margin-top: 0.6rem;
+      padding: 8px 12px;
+      background: rgba(239,68,68,0.08);
+      border-radius: var(--r-sm);
+      border: 1px solid rgba(239,68,68,0.2);
+    }
+
+    /* ── Question blocks ─────────────────────────────────────────── */
+    .q-counter {
+      font-family: var(--font-d);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.3rem;
+    }
+
+    .q-block {
+      margin-bottom: 0;
+      padding: 1.1rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      background: var(--card);
+      transition: background 0.15s;
+    }
+    .q-block:first-child { border-radius: var(--r-lg) var(--r-lg) 0 0; }
+    .q-block:last-child  {
+      border-bottom: none;
+      border-radius: 0 0 var(--r-lg) var(--r-lg);
+    }
+    .q-block:only-child  { border-radius: var(--r-lg); }
+    .q-block.answered    { background: rgba(232,64,28,0.04); }
+
+    .q-text {
+      font-size: 0.88rem;
+      line-height: 1.55;
+      color: var(--light);
+      margin-bottom: 0.85rem;
+    }
+    .q-num {
+      font-family: var(--font-d);
+      font-weight: 700;
+      color: var(--red);
+      margin-right: 4px;
+      font-size: 0.8rem;
+    }
+
+    .scale {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .sb {
+      flex: 1;
+      min-width: 0;
+      height: 36px;
+      border-radius: var(--r-sm);
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--muted);
+      font-family: var(--font-d);
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .sb:hover {
+      border-color: rgba(232,64,28,0.5);
+      color: var(--red);
+      background: var(--red-bg);
+    }
+    .sb.sel {
+      background: var(--red);
+      border-color: var(--red);
+      color: white;
+      box-shadow: 0 2px 8px rgba(232,64,28,0.3);
+    }
+    .scale-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.65rem;
+      color: var(--muted);
+      margin-top: 5px;
+      padding: 0 2px;
+    }
+
+    /* ── Emotion grid ────────────────────────────────────────────── */
+    .emo-group-label {
+      font-family: var(--font-d);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 1.1rem 0 0.5rem;
+    }
+    .emo-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 2px;
+    }
+    .emo-chip {
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      font-size: 0.82rem;
+      font-weight: 400;
+      color: var(--dim);
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: var(--font-b);
+    }
+    .emo-chip:hover {
+      border-color: rgba(232,64,28,0.4);
+      color: var(--light);
+      background: var(--raised);
+    }
+    .emo-chip.sel {
+      border-color: var(--red);
+      color: var(--red);
+      background: var(--red-bg);
+      font-weight: 500;
+    }
+    .emo-count {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 0.6rem;
+      padding: 6px 12px;
+      background: var(--card);
+      border-radius: var(--r-sm);
+      border: 1px solid var(--border);
+      display: inline-block;
+    }
+
+    /* ── Inventory ───────────────────────────────────────────────── */
+    .inv-section {
+      margin-bottom: 1.5rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      overflow: hidden;
+    }
+    .inv-header {
+      padding: 0.9rem 1.1rem 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .inv-title {
+      font-family: var(--font-d);
+      font-size: 0.82rem;
+      font-weight: 700;
+      margin-bottom: 1px;
+    }
+    .inv-desc {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+    .inv-body {
+      padding: 0.75rem 1.1rem 1rem;
+    }
+    .chips-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-bottom: 0.6rem;
+    }
+    .sug-chip {
+      padding: 4px 10px;
+      border-radius: 20px;
+      border: 1px dashed var(--border2);
+      background: transparent;
+      font-size: 0.72rem;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: var(--font-b);
+    }
+    .sug-chip:hover {
+      border-color: var(--dim);
+      color: var(--light);
+      background: var(--raised);
+    }
+    .inv-inp {
+      width: 100%;
+      padding: 8px 11px;
+      background: var(--raised);
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      color: var(--white);
+      font-size: 0.85rem;
+      font-family: var(--font-b);
+      margin-bottom: 5px;
+      outline: none;
+      transition: border-color 0.18s;
+    }
+    .inv-inp:focus { border-color: rgba(232,64,28,0.5); }
+    .inv-inp::placeholder { color: var(--muted); font-size: 0.8rem; font-style: italic; }
+
+    /* ── Weight sliders ──────────────────────────────────────────── */
+    .wt-section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      margin-bottom: 1.25rem;
+    }
+    .wt-header {
+      padding: 0.85rem 1.1rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .wt-header-label {
+      font-family: var(--font-d);
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+    .wt-total {
+      font-family: var(--font-d);
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+    .wt-body { padding: 0.5rem 1.1rem 0.9rem; }
+    .wt-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 6px;
+      padding: 4px 0;
+    }
+    .wt-label {
+      font-size: 0.82rem;
+      color: var(--mid);
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      min-width: 0;
+      max-width: 45%;
+    }
+    .wt-pct {
+      font-family: var(--font-d);
+      font-size: 0.8rem;
+      font-weight: 700;
+      min-width: 38px;
+      text-align: right;
+      color: var(--light);
+    }
+    .wt-msg {
+      font-size: 0.72rem;
+      padding: 4px 0 2px;
+    }
+    input[type=range] {
+      flex: 1.4;
+      accent-color: var(--red);
+      height: 4px;
+      cursor: pointer;
+    }
+
+    /* ── Results ─────────────────────────────────────────────────── */
+    .result-header {
+      padding: 1.5rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      margin-bottom: 1rem;
+    }
+    .severity-label {
+      font-family: var(--font-d);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .severity-row {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+    .severity-score {
+      font-family: var(--font-d);
+      font-size: 3rem;
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -0.04em;
+    }
+    .severity-denom {
+      font-size: 1rem;
+      color: var(--muted);
+    }
+    .severity-tag {
+      font-family: var(--font-d);
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+      margin-left: 4px;
+    }
+
+    .arc-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 1.25rem;
+      margin-bottom: 0.75rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .arc-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+    }
+    .arc-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-family: var(--font-d);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-bottom: 0.6rem;
+    }
+    .arc-name {
+      font-family: var(--font-d);
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 3px;
+    }
+    .arc-tagline {
+      font-size: 0.85rem;
+      color: var(--dim);
+      font-style: italic;
+      margin-bottom: 0.6rem;
+      font-weight: 300;
+    }
+    .arc-desc {
+      font-size: 0.85rem;
+      color: var(--mid);
+      line-height: 1.65;
+    }
+
+    .section-eyebrow {
+      font-family: var(--font-d);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 1.5rem 0 0.6rem;
+    }
+
+    /* Arc score bars */
+    .arc-score-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .arc-score-label {
+      font-size: 0.8rem;
+      color: var(--mid);
+      width: 155px;
+      flex-shrink: 0;
+      min-width: 0;
+    }
+    .arc-score-track {
+      flex: 1;
+      height: 4px;
+      background: var(--raised);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .arc-score-fill {
+      height: 4px;
+      border-radius: 3px;
+      transition: width 0.8s cubic-bezier(.4,0,.2,1);
+    }
+    .arc-score-val {
+      font-family: var(--font-d);
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--muted);
+      min-width: 28px;
+      text-align: right;
+    }
+
+    /* Dimension cards */
+    .dim-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 1rem;
+    }
+    .dim-card {
+      background: var(--card);
+      border-radius: var(--r);
+      padding: 0.85rem 1rem;
+      border: 1px solid var(--border);
+      border-left: 3px solid;
+    }
+    .dim-label {
+      font-family: var(--font-d);
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: var(--muted);
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .dim-pct {
+      font-family: var(--font-d);
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1;
+    }
+    .bar-track {
+      height: 2px;
+      background: var(--raised);
+      border-radius: 2px;
+      margin-top: 8px;
+      overflow: hidden;
+    }
+    .bar-fill {
+      height: 2px;
+      border-radius: 2px;
+    }
+
+    /* Insight */
+    .insight {
+      padding: 0.85rem 1rem;
+      margin-bottom: 0.6rem;
+      background: var(--card);
+      border-radius: 0 var(--r) var(--r) 0;
+      border: 1px solid var(--border);
+      border-left: 3px solid;
+    }
+    .insight-t {
+      font-family: var(--font-d);
+      font-size: 0.82rem;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+    .insight-d {
+      font-size: 0.8rem;
+      color: var(--dim);
+      line-height: 1.6;
+    }
+
+    /* Week grid */
+    .week-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 1rem;
+    }
+    .week-card {
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 0.85rem 0.75rem;
+      background: var(--card);
+    }
+    .week-n {
+      font-family: var(--font-d);
+      font-size: 0.6rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 3px;
+      white-space: nowrap;
+    }
+    .week-theme {
+      font-family: var(--font-d);
+      font-size: 0.82rem;
+      font-weight: 700;
+      margin-bottom: 3px;
+    }
+    .week-focus {
+      font-size: 0.7rem;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    /* Techniques */
+    .tech-chip {
+      display: inline-block;
+      padding: 4px 11px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      font-size: 0.75rem;
+      color: var(--dim);
+      margin: 3px;
+      background: var(--card);
+      font-family: var(--font-b);
+    }
+
+    /* Buy section */
+    .buy-section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 1.5rem;
+      margin-top: 1.75rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .buy-section::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--red), transparent);
+    }
+    .buy-title {
+      font-family: var(--font-d);
+      font-size: 1.05rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.4rem;
+    }
+    .buy-desc {
+      font-size: 0.82rem;
+      color: var(--dim);
+      margin-bottom: 1.1rem;
+      line-height: 1.6;
+    }
+    .buy-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      width: 100%;
+      padding: 14px 20px;
+      background: var(--red);
+      border: none;
+      border-radius: var(--r);
+      color: white;
+      font-family: var(--font-d);
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.18s;
+      box-shadow: 0 4px 18px rgba(232,64,28,0.32);
+      letter-spacing: 0.01em;
+    }
+    .buy-btn:hover {
+      background: var(--red-d);
+      box-shadow: 0 6px 24px rgba(232,64,28,0.42);
+      transform: translateY(-1px);
+    }
+    .buy-guarantee {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 0.75rem;
+      flex-wrap: wrap;
+      text-align: center;
+    }
+
+    /* ── Responsive ──────────────────────────────────────────────── */
+    /* ── 640px — large phones / small tablets ─────────────────────── */
+    @media (max-width: 640px) {
+      .app { padding: 2rem 1rem 4rem; }
+
+      h1          { font-size: clamp(1.45rem, 5vw, 2rem); }
+      h1.h1-sm    { font-size: clamp(1.2rem, 4.5vw, 1.35rem); }
+      h2.section-h{ font-size: 1rem; }
+      .sub        { font-size: 0.85rem; }
+
+      /* Scale buttons — full width row */
+      .scale      { gap: 4px; }
+      .sb         { height: 38px; font-size: 0.78rem; }
+
+      /* Result score bars — label truncates */
+      .arc-score-label { width: 120px; font-size: 0.75rem; }
+
+      /* Buy button */
+      .buy-btn    { font-size: 0.88rem; padding: 13px 16px; }
+      .buy-guarantee { flex-wrap: wrap; gap: 3px; justify-content: center; font-size: 0.68rem; }
+    }
+
+    /* ── 480px — standard phones ───────────────────────────────────── */
+    @media (max-width: 480px) {
+      .app { padding: 1.5rem 0.9rem 4rem; }
+
+      h1       { font-size: clamp(1.3rem, 6vw, 1.65rem); }
+      h1.h1-sm { font-size: clamp(1.1rem, 5vw, 1.3rem); }
+      .sub     { font-size: 0.82rem; }
+
+      /* Week grid: 2 cols on small phones */
+      .week-grid { grid-template-columns: 1fr 1fr; }
+      .week-card { padding: 0.7rem 0.6rem; }
+      .week-theme{ font-size: 0.78rem; }
+      .week-focus{ font-size: 0.66rem; }
+
+      /* Dim grid: single col */
+      .dim-grid  { grid-template-columns: 1fr; }
+
+      /* Arc score bars — compact */
+      .arc-score-label { width: 100px; font-size: 0.72rem; }
+      .arc-score-val   { font-size: 0.68rem; }
+
+      /* Result header — tighter */
+      .result-header   { padding: 1rem 1rem; }
+      .severity-score  { font-size: 2.4rem; }
+      .severity-tag    { font-size: 0.72rem; padding: 3px 8px; }
+
+      /* Button row — stack on very small */
+      .btn-row    { flex-direction: column; }
+      .btn-row .btn { width: 100%; justify-content: center; }
+
+      /* Inventory inputs */
+      .inv-header { padding: 0.75rem 0.9rem 0.4rem; }
+      .inv-body   { padding: 0.6rem 0.9rem 0.8rem; }
+      .inv-title  { font-size: 0.78rem; }
+      .inv-inp    { font-size: 0.82rem; padding: 7px 10px; }
+
+      /* Weight sliders */
+      .wt-label   { font-size: 0.75rem; max-width: 100px; }
+      .wt-pct     { font-size: 0.75rem; min-width: 32px; }
+
+      /* Intro steps */
+      .intro-step { padding: 0.85rem 1rem; gap: 10px; }
+      .intro-step-title { font-size: 0.82rem; }
+
+      /* Meta pills — wrap cleanly */
+      .intro-meta { gap: 5px; }
+      .meta-pill  { font-size: 0.68rem; padding: 3px 8px; }
+
+      /* Emotion chips */
+      .emo-chip   { font-size: 0.78rem; padding: 5px 11px; }
+    }
+
+    /* ── 360px — very small phones (Galaxy S8 etc) ─────────────────── */
+    @media (max-width: 360px) {
+      .app { padding: 1.25rem 0.75rem 3.5rem; }
+      h1   { font-size: 1.25rem; }
+      .sb  { height: 34px; font-size: 0.72rem; }
+      .arc-score-label { width: 85px; }
+      .week-grid { grid-template-columns: 1fr 1fr; gap: 5px; }
+      .buy-btn   { font-size: 0.82rem; }
+      .severity-score { font-size: 2rem; }
+    }
   </style>
 </head>
 <body>
 <div class="app">
 
+<!-- ════════════════════════════════════════════════
+     STEP 1 — INTRO
+════════════════════════════════════════════════ -->
 <div class="step active" id="step-1">
-  <div style="font-size:.75rem;font-weight:700;letter-spacing:.15em;color:#6B7280;margin-bottom:.5rem;text-transform:uppercase">The 30-Day Burnout Reset</div>
-  <h1>Find out why<br>you're burnt out.</h1>
-  <p class="sub">Free. 8 minutes. No signup. Identifies your burnout archetype and pattern.</p>
-  <hr>
-  <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:1.5rem">
-    <div style="display:flex;gap:12px;align-items:flex-start">
-      <div style="width:22px;height:22px;border-radius:50%;background:#E8401C;display:flex;align-items:center;justify-content:center;font-size:.7rem;color:#fff;font-weight:700;flex-shrink:0">1</div>
-      <div><div style="font-size:.9rem;font-weight:700;color:#E6EDF3">Burnout check</div><div style="font-size:.8rem;color:#6B7280">10 questions across four dimensions</div></div>
+  <div class="intro-eyebrow">
+    <span class="intro-eyebrow-dot"></span>
+    The 30-Day Burnout Reset
+  </div>
+  <h1>Find out why<br>you're <em>burnt out.</em></h1>
+  <p class="sub">Free. 8 minutes. No signup. Identifies your burnout archetype and the pattern beneath it.</p>
+
+  <div class="intro-meta">
+    <span class="meta-pill">Free — no card needed</span>
+    <span class="meta-pill">8 minutes</span>
+    <span class="meta-pill">No account required</span>
+  </div>
+
+  <div class="intro-steps">
+    <div class="intro-step">
+      <div class="intro-step-num" style="background:var(--red)">1</div>
+      <div class="intro-step-body">
+        <div class="intro-step-title">Burnout check</div>
+        <div class="intro-step-desc">10 questions across four dimensions</div>
+      </div>
     </div>
-    <div style="display:flex;gap:12px;align-items:flex-start">
-      <div style="width:22px;height:22px;border-radius:50%;background:#0D7377;display:flex;align-items:center;justify-content:center;font-size:.7rem;color:#fff;font-weight:700;flex-shrink:0">2</div>
-      <div><div style="font-size:.9rem;font-weight:700;color:#E6EDF3">Your inventory</div><div style="font-size:.8rem;color:#6B7280">Emotions, triggers, responses, actions, consequences</div></div>
+    <div class="intro-step">
+      <div class="intro-step-num" style="background:var(--teal)">2</div>
+      <div class="intro-step-body">
+        <div class="intro-step-title">Your inventory</div>
+        <div class="intro-step-desc">Emotions, triggers, responses, actions, consequences</div>
+      </div>
     </div>
-    <div style="display:flex;gap:12px;align-items:flex-start">
-      <div style="width:22px;height:22px;border-radius:50%;background:#15803D;display:flex;align-items:center;justify-content:center;font-size:.7rem;color:#fff;font-weight:700;flex-shrink:0">3</div>
-      <div><div style="font-size:.9rem;font-weight:700;color:#E6EDF3">Reveal your archetype</div><div style="font-size:.8rem;color:#6B7280">Your burnout pattern and personalized 30-day guide</div></div>
+    <div class="intro-step">
+      <div class="intro-step-num" style="background:#15803d">3</div>
+      <div class="intro-step-body">
+        <div class="intro-step-title">Reveal your archetype</div>
+        <div class="intro-step-desc">Your burnout pattern and personalized 30-day guide</div>
+      </div>
     </div>
   </div>
-  <button class="btn btn-p" onclick="goTo(2)">Start free assessment &#8599;</button>
+
+  <button class="btn btn-p btn-full" onclick="goTo(2)">Start free assessment ↗</button>
 </div>
 
+<!-- ════════════════════════════════════════════════
+     STEP 2 — QUIZ
+════════════════════════════════════════════════ -->
 <div class="step" id="step-2">
-  <div class="prog"><div class="prog-fill" id="qbar" style="width:0%"></div></div>
-  <div style="font-size:.75rem;font-weight:700;color:#6B7280;margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.1em">Part 1 of 3 — Burnout check &nbsp; <span id="qprog">0/10</span></div>
-  <h1 style="font-size:1.4rem;margin-bottom:.5rem">How are you really doing?</h1>
-  <p class="sub">1 = not at all true, 5 = completely true right now.</p>
-  <div id="qwrap"></div>
+  <div class="prog"><div class="prog-fill" id="qbar" style="width:0%;background:var(--red)"></div></div>
+  <div class="step-label">Part 1 of 3 — Burnout check &nbsp;·&nbsp; <span id="qprog">0 / 10</span></div>
+  <h1 class="h1-sm">How are you really doing?</h1>
+  <p class="sub">1 = not at all true &nbsp;·&nbsp; 5 = completely true right now</p>
+  <div id="qwrap" style="border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;margin-bottom:.5rem"></div>
   <div class="btn-row">
-    <button class="btn" onclick="goTo(1)">&#8592; Back</button>
-    <button class="btn btn-p" onclick="submitQuiz()">Next: Your inventory &#8599;</button>
+    <button class="btn" onclick="goTo(1)">← Back</button>
+    <button class="btn btn-p" onclick="submitQuiz()">Next: Your inventory ↗</button>
   </div>
-  <div class="err" id="qerr" style="display:none">Please answer all 10 questions.</div>
+  <div class="err" id="qerr">Please answer all 10 questions before continuing.</div>
 </div>
 
+<!-- ════════════════════════════════════════════════
+     STEP 3 — INVENTORY
+════════════════════════════════════════════════ -->
 <div class="step" id="step-3">
-  <div class="prog"><div class="prog-fill" style="width:45%;background:#0D7377"></div></div>
-  <div style="font-size:.75rem;font-weight:700;color:#6B7280;margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.1em">Part 2 of 3 — Your inventory</div>
-  <h1 style="font-size:1.4rem;margin-bottom:.5rem">Name what you're feeling.</h1>
-  <p class="sub">Pick 3-6 emotions. Then fill in your patterns.</p>
-  <div>
-    <div class="emo-group-label">Depleted</div><div class="emo-grid" id="emo-depleted"></div>
-    <div class="emo-group-label">Disconnected</div><div class="emo-grid" id="emo-disconnected"></div>
-    <div class="emo-group-label">Under pressure</div><div class="emo-grid" id="emo-pressure"></div>
-    <div class="emo-group-label">Relational</div><div class="emo-grid" id="emo-relational"></div>
-    <div class="emo-group-label">Identity</div><div class="emo-grid" id="emo-identity"></div>
-  </div>
-  <div class="emo-count" id="emo-count">0 selected (need at least 3)</div>
+  <div class="prog"><div class="prog-fill" style="width:45%;background:var(--teal)"></div></div>
+  <div class="step-label">Part 2 of 3 — Your inventory</div>
+  <h1 class="h1-sm">Name what you're feeling.</h1>
+  <p class="sub">Pick 3–6 emotions that are most present right now. Then describe your patterns.</p>
+
+  <div class="emo-group-label">Depleted</div><div class="emo-grid" id="emo-depleted"></div>
+  <div class="emo-group-label">Disconnected</div><div class="emo-grid" id="emo-disconnected"></div>
+  <div class="emo-group-label">Under pressure</div><div class="emo-grid" id="emo-pressure"></div>
+  <div class="emo-group-label">Relational</div><div class="emo-grid" id="emo-relational"></div>
+  <div class="emo-group-label">Identity</div><div class="emo-grid" id="emo-identity"></div>
+  <div class="emo-count" id="emo-count">0 selected — need at least 3</div>
+
   <hr>
-  <h1 style="font-size:1.2rem;margin:1.25rem 0 .5rem">Name the patterns.</h1>
-  <div class="inv-section"><div class="inv-title" style="color:#E8401C">Triggers</div>
-    <div class="inv-desc">What sets it off?</div>
-    <div class="chips-row" id="sug-triggers"></div><div id="triggers-inputs"></div></div>
-  <div class="inv-section"><div class="inv-title" style="color:#0D7377">Responses</div>
-    <div class="inv-desc">How do you react in the moment?</div>
-    <div class="chips-row" id="sug-responses"></div><div id="responses-inputs"></div></div>
-  <div class="inv-section"><div class="inv-title" style="color:#B45309">Actions</div>
-    <div class="inv-desc">What do you do to cope or escape?</div>
-    <div class="chips-row" id="sug-actions"></div><div id="actions-inputs"></div></div>
-  <div class="inv-section"><div class="inv-title" style="color:#6D28D9">Consequences</div>
-    <div class="inv-desc">What does this cost you over time?</div>
-    <div class="chips-row" id="sug-consequences"></div><div id="consequences-inputs"></div></div>
-  <div class="btn-row">
-    <button class="btn" onclick="goTo(2)">&#8592; Back</button>
-    <button class="btn btn-p" onclick="submitInventory()">Next: Assign weights &#8599;</button>
+  <h2 class="section-h">Name the patterns.</h2>
+  <p class="sub" style="margin-bottom:1.25rem">Fill in 3 items per category. Use the suggestions or write your own.</p>
+
+  <div class="inv-section">
+    <div class="inv-header"><div class="inv-title" style="color:var(--red)">Triggers</div><div class="inv-desc">What sets it off?</div></div>
+    <div class="inv-body"><div class="chips-row" id="sug-triggers"></div><div id="triggers-inputs"></div></div>
   </div>
-  <div class="err" id="inverr" style="display:none"></div>
+  <div class="inv-section">
+    <div class="inv-header"><div class="inv-title" style="color:var(--teal)">Responses</div><div class="inv-desc">How do you react in the moment?</div></div>
+    <div class="inv-body"><div class="chips-row" id="sug-responses"></div><div id="responses-inputs"></div></div>
+  </div>
+  <div class="inv-section">
+    <div class="inv-header"><div class="inv-title" style="color:var(--amber)">Actions</div><div class="inv-desc">What do you do to cope or escape?</div></div>
+    <div class="inv-body"><div class="chips-row" id="sug-actions"></div><div id="actions-inputs"></div></div>
+  </div>
+  <div class="inv-section">
+    <div class="inv-header"><div class="inv-title" style="color:var(--purple)">Consequences</div><div class="inv-desc">What does this cost you over time?</div></div>
+    <div class="inv-body"><div class="chips-row" id="sug-consequences"></div><div id="consequences-inputs"></div></div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn" onclick="goTo(2)">← Back</button>
+    <button class="btn btn-p" onclick="submitInventory()">Next: Assign weights ↗</button>
+  </div>
+  <div class="err" id="inverr"></div>
 </div>
 
+<!-- ════════════════════════════════════════════════
+     STEP 4 — WEIGHTS
+════════════════════════════════════════════════ -->
 <div class="step" id="step-4">
-  <div class="prog"><div class="prog-fill" style="width:75%;background:#15803D"></div></div>
-  <div style="font-size:.75rem;font-weight:700;color:#6B7280;margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.1em">Part 3 of 3 — Weight and reveal</div>
-  <h1 style="font-size:1.4rem;margin-bottom:.5rem">What's weighing on you most?</h1>
-  <p class="sub">Adjust sliders until each group adds to 100. This reveals your archetype.</p>
+  <div class="prog"><div class="prog-fill" style="width:75%;background:#15803d"></div></div>
+  <div class="step-label">Part 3 of 3 — Weight and reveal</div>
+  <h1 class="h1-sm">What's weighing on you most?</h1>
+  <p class="sub">Adjust each group to total 100%. This calibrates your archetype result.</p>
   <div id="weights-wrap"></div>
   <div class="btn-row">
-    <button class="btn" onclick="goTo(3)">&#8592; Back</button>
-    <button class="btn btn-p" onclick="generateResults()">Reveal my profile &#8599;</button>
+    <button class="btn" onclick="goTo(3)">← Back</button>
+    <button class="btn btn-p" onclick="generateResults()">Reveal my profile ↗</button>
   </div>
-  <div class="err" id="wterr" style="display:none"></div>
+  <div class="err" id="wterr"></div>
 </div>
 
+<!-- ════════════════════════════════════════════════
+     STEP 5 — RESULTS
+════════════════════════════════════════════════ -->
 <div class="step" id="step-5">
-  <div class="prog"><div class="prog-fill" style="width:100%;background:#E8401C"></div></div>
+  <div class="prog"><div class="prog-fill" style="width:100%;background:var(--red)"></div></div>
   <div id="results-content"></div>
   <div class="btn-row" style="margin-top:1.5rem">
     <button class="btn" onclick="goTo(1)">Start over</button>
   </div>
 </div>
 
-</div>
+</div><!-- /app -->
+
 <script>
+/* ═══════════════════════════════════════════════════════════════
+   DATA — identical to original
+═══════════════════════════════════════════════════════════════ */
 const QS=[
   {text:"I feel exhausted even after a full night of sleep.",dim:"physical"},
   {text:"Small tasks feel like they take everything I have.",dim:"physical"},
@@ -221,7 +1122,6 @@ const DIMS=[
   {key:"overload",label:"Overwhelm",short:"Overwhelm",color:"#0D7377",max:10},
   {key:"purpose",label:"Lost purpose",short:"Lost purpose",color:"#A855F7",max:10},
 ];
-// REPLACE THESE WITH YOUR REAL PAYHIP PRODUCT URLS AFTER CREATING PAYHIP PRODUCTS
 const PAYHIP_URLS={
   overextended:"https://payhip.com/b/ZSIj1",
   numb:"https://payhip.com/b/PygEe",
@@ -262,48 +1162,367 @@ const ARCHETYPES=[
    weeks:[{t:"Acknowledge",f:"Naming the drift early"},{t:"Protect",f:"Small habits that hold"},{t:"Attune",f:"Learning warning signals"},{t:"Sustain",f:"Prevention as practice"}],
    score(d,e,inv){const total=Object.values(qa).reduce((a,b)=>a+b,0);if(total<=22){const spread=Math.max(...Object.values(d))-Math.min(...Object.values(d));return Math.min(100,Math.round(60+(22-total)*2+(spread<30?15:0)));}return Math.max(0,Math.round(30-(total-22)*2));}},
 ];
+
+/* ═══════════════════════════════════════════════════════════════
+   STATE
+═══════════════════════════════════════════════════════════════ */
 let qa={},selectedEmos=new Set(),invData={},wtData={};
 function getInvText(inv){return Object.values(inv).flat().filter(Boolean).join(" ");}
-function goTo(n){document.querySelectorAll(".step").forEach(s=>s.classList.remove("active"));document.getElementById("step-"+n).classList.add("active");window.scrollTo(0,0);if(n===2&&!document.getElementById("qwrap").children.length)renderQuiz();if(n===3)renderInventory();if(n===4)renderWeights();}
-function renderQuiz(){const w=document.getElementById("qwrap");w.innerHTML="";QS.forEach((q,i)=>{const d=document.createElement("div");d.className="q-block";d.innerHTML="<div class='q-text'>"+(i+1)+". "+q.text+"</div><div class='scale' id='qb"+i+"'>"+[1,2,3,4,5].map(v=>"<button class='sb"+(qa[i]===v?" sel":"")+"' onclick='pickQ("+i+","+v+")'>"+v+"</button>").join("")+"</div><div class='scale-labels'><span>Not at all</span><span>Completely</span></div>";w.appendChild(d);});updateQP();}
-function pickQ(i,v){qa[i]=v;document.querySelectorAll("#qb"+i+" .sb").forEach((b,j)=>b.classList.toggle("sel",j+1===v));updateQP();}
-function updateQP(){const d=Object.keys(qa).length;document.getElementById("qprog").textContent=d+"/10";document.getElementById("qbar").style.width=(d*10)+"%";}
-function submitQuiz(){if(Object.keys(qa).length<10){document.getElementById("qerr").style.display="block";return;}document.getElementById("qerr").style.display="none";goTo(3);}
-function renderInventory(){Object.entries(EMOTIONS).forEach(([grp,list])=>{const el=document.getElementById("emo-"+grp);if(!el)return;el.innerHTML="";list.forEach(e=>{const c=document.createElement("button");c.className="emo-chip"+(selectedEmos.has(e)?" sel":"");c.textContent=e;c.onclick=()=>toggleEmo(e,c);el.appendChild(c);});});updateEmoCount();INV_CATS.forEach(cat=>{const sw=document.getElementById("sug-"+cat.key);if(sw&&!sw.children.length){SUGS[cat.key].forEach(s=>{const c=document.createElement("button");c.className="sug-chip";c.textContent="+ "+s;c.onclick=()=>addSug(cat.key,s,c);sw.appendChild(c);});}renderInvInputs(cat.key);});}
-function toggleEmo(e,el){if(selectedEmos.has(e)){selectedEmos.delete(e);el.classList.remove("sel");}else if(selectedEmos.size<6){selectedEmos.add(e);el.classList.add("sel");}updateEmoCount();}
-function updateEmoCount(){const n=selectedEmos.size;const el=document.getElementById("emo-count");el.textContent=n<3?n+" selected (need "+(3-n)+" more)":n+" selected";el.style.color=n>=3?"#22C55E":"#6B7280";}
-function renderInvInputs(key){const w=document.getElementById(key+"-inputs");if(!w)return;w.innerHTML="";const ex=invData[key]||["","","",""];for(let i=0;i<4;i++){const row=document.createElement("div");const inp=document.createElement("input");inp.className="inv-inp";inp.type="text";inp.value=ex[i]||"";inp.placeholder=i<3?"Write your own or tap a suggestion...":"Optional fourth item...";inp.dataset.cat=key;inp.dataset.idx=i;inp.oninput=function(){saveInv(this);};row.appendChild(inp);w.appendChild(row);}}
-function addSug(key,text,btn){if(!invData[key])invData[key]=["","","",""];const idx=invData[key].findIndex((v,i)=>i<4&&!v.trim());if(idx===-1)return;invData[key][idx]=text;btn.style.opacity="0.3";btn.style.pointerEvents="none";renderInvInputs(key);}
-function saveInv(el){const k=el.dataset.cat,i=parseInt(el.dataset.idx);if(!invData[k])invData[k]=["","","",""];invData[k][i]=el.value;}
-function submitInventory(){if(selectedEmos.size<3){const e=document.getElementById("inverr");e.style.display="block";e.textContent="Please select at least 3 emotions.";return;}const errs=[];INV_CATS.forEach(cat=>{if((invData[cat.key]||[]).filter((v,i)=>i<3&&v.trim()).length<3)errs.push(cat.label);});if(errs.length){const e=document.getElementById("inverr");e.style.display="block";e.textContent="Please fill in 3 items for: "+errs.join(", ");return;}document.getElementById("inverr").style.display="none";goTo(4);}
-function renderWeights(){const w=document.getElementById("weights-wrap");w.innerHTML="";const secs=[{key:"emotions",label:"Emotions",color:"#3B82F6",items:[...selectedEmos]},...INV_CATS.map(c=>({key:c.key,label:c.label,color:c.color,items:(invData[c.key]||[]).filter(v=>v&&v.trim())}))];secs.forEach(sec=>{if(!sec.items.length)return;if(!wtData[sec.key]){const eq=Math.floor(100/sec.items.length);wtData[sec.key]=sec.items.map((_,i)=>i===sec.items.length-1?100-eq*(sec.items.length-1):eq);}const div=document.createElement("div");div.style.marginBottom="1.5rem";const hdr=document.createElement("div");hdr.style.cssText="display:flex;justify-content:space-between;margin-bottom:.5rem";hdr.innerHTML="<div style='font-size:.9rem;font-weight:700;color:"+sec.color+"'>"+sec.label+"</div><div id='wtot-"+sec.key+"' style='font-size:.75rem;color:#6B7280'>100%</div>";div.appendChild(hdr);const iw=document.createElement("div");iw.id="wi-"+sec.key;div.appendChild(iw);const msg=document.createElement("div");msg.id="wm-"+sec.key;div.appendChild(msg);const hr=document.createElement("hr");div.appendChild(hr);w.appendChild(div);sec.items.forEach((item,i)=>{const row=document.createElement("div");row.className="wt-row";const lbl=document.createElement("div");lbl.className="wt-label";lbl.title=item;lbl.textContent=item;const slider=document.createElement("input");slider.type="range";slider.style.flex="1.2";slider.min=0;slider.max=100;slider.step=1;slider.value=wtData[sec.key][i];const pct=document.createElement("div");pct.className="wt-pct";pct.id="wp-"+sec.key+"-"+i;pct.textContent=wtData[sec.key][i]+"%";slider.oninput=function(){updateWt(sec.key,i,this.value);};row.appendChild(lbl);row.appendChild(slider);row.appendChild(pct);iw.appendChild(row);});updateWtDisp(sec.key);});}
-function updateWt(k,i,v){wtData[k][i]=parseInt(v);document.getElementById("wp-"+k+"-"+i).textContent=v+"%";updateWtDisp(k);}
-function updateWtDisp(k){const sum=(wtData[k]||[]).reduce((a,b)=>a+b,0);const t=document.getElementById("wtot-"+k);const m=document.getElementById("wm-"+k);if(!t)return;t.textContent="Total: "+sum+"%";const ok=Math.abs(sum-100)<=2;t.style.color=ok?"#22C55E":"#F59E0B";m.innerHTML=ok?"<div style='font-size:.75rem;color:#22C55E;margin-top:4px'>Total is "+sum+"% ✓</div>":"<div style='font-size:.75rem;color:#F59E0B;margin-top:4px'>Adjust to reach 100% (currently "+sum+"%)</div>";}
-function generateResults(){const bad=[];["emotions",...INV_CATS.map(c=>c.key)].forEach(k=>{if(!wtData[k])return;if(Math.abs((wtData[k]||[]).reduce((a,b)=>a+b,0)-100)>2)bad.push(k);});if(bad.length){const e=document.getElementById("wterr");e.style.display="block";e.textContent="Please adjust sliders to 100% for: "+bad.join(", ");return;}document.getElementById("wterr").style.display="none";buildResults();goTo(5);}
-function getDimPcts(){const p={};DIMS.forEach(d=>{const s=QS.map((q,i)=>q.dim===d.key?qa[i]||0:0).reduce((a,b)=>a+b,0);p[d.key]=Math.round(s/d.max*100);});return p;}
-function scoreArchetypes(){const dp=getDimPcts();const e=[...selectedEmos];return ARCHETYPES.map(a=>({...a,arcScore:a.score(dp,e,invData)})).sort((a,b)=>b.arcScore-a.arcScore);}
-function getLevel(s){if(s<=20)return{label:"Early warning",color:"#0D7377"};if(s<=30)return{label:"Moderate burnout",color:"#3B82F6"};if(s<=40)return{label:"Significant burnout",color:"#E8401C"};return{label:"Severe burnout",color:"#A855F7"};}
+
+/* ═══════════════════════════════════════════════════════════════
+   NAVIGATION
+═══════════════════════════════════════════════════════════════ */
+function goTo(n){
+  document.querySelectorAll(".step").forEach(s=>s.classList.remove("active"));
+  document.getElementById("step-"+n).classList.add("active");
+  window.scrollTo({top:0,behavior:"smooth"});
+  if(n===2&&!document.getElementById("qwrap").children.length)renderQuiz();
+  if(n===3)renderInventory();
+  if(n===4)renderWeights();
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   STEP 2 — QUIZ
+═══════════════════════════════════════════════════════════════ */
+function renderQuiz(){
+  const w=document.getElementById("qwrap");
+  w.innerHTML="";
+  QS.forEach((q,i)=>{
+    const d=document.createElement("div");
+    d.className="q-block"+(qa[i]?" answered":"");
+    d.id="qblock-"+i;
+    d.innerHTML=`
+      <div class="q-text"><span class="q-num">${i+1}.</span>${q.text}</div>
+      <div class="scale" id="qb${i}">
+        ${[1,2,3,4,5].map(v=>`<button class="sb${qa[i]===v?" sel":""}" onclick="pickQ(${i},${v})">${v}</button>`).join("")}
+      </div>
+      <div class="scale-labels"><span>Not at all</span><span>Completely</span></div>`;
+    w.appendChild(d);
+  });
+  updateQP();
+}
+function pickQ(i,v){
+  qa[i]=v;
+  document.querySelectorAll("#qb"+i+" .sb").forEach((b,j)=>b.classList.toggle("sel",j+1===v));
+  const block=document.getElementById("qblock-"+i);
+  if(block)block.classList.add("answered");
+  updateQP();
+}
+function updateQP(){
+  const d=Object.keys(qa).length;
+  document.getElementById("qprog").textContent=d+" / 10";
+  document.getElementById("qbar").style.width=(d*10)+"%";
+}
+function submitQuiz(){
+  if(Object.keys(qa).length<10){document.getElementById("qerr").style.display="block";return;}
+  document.getElementById("qerr").style.display="none";
+  goTo(3);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   STEP 3 — INVENTORY
+═══════════════════════════════════════════════════════════════ */
+function renderInventory(){
+  Object.entries(EMOTIONS).forEach(([grp,list])=>{
+    const el=document.getElementById("emo-"+grp);
+    if(!el)return;
+    el.innerHTML="";
+    list.forEach(e=>{
+      const c=document.createElement("button");
+      c.className="emo-chip"+(selectedEmos.has(e)?" sel":"");
+      c.textContent=e;
+      c.onclick=()=>toggleEmo(e,c);
+      el.appendChild(c);
+    });
+  });
+  updateEmoCount();
+  INV_CATS.forEach(cat=>{
+    const sw=document.getElementById("sug-"+cat.key);
+    if(sw&&!sw.children.length){
+      SUGS[cat.key].forEach(s=>{
+        const c=document.createElement("button");
+        c.className="sug-chip";
+        c.textContent="+ "+s;
+        c.onclick=()=>addSug(cat.key,s,c);
+        sw.appendChild(c);
+      });
+    }
+    renderInvInputs(cat.key);
+  });
+}
+function toggleEmo(e,el){
+  if(selectedEmos.has(e)){selectedEmos.delete(e);el.classList.remove("sel");}
+  else if(selectedEmos.size<6){selectedEmos.add(e);el.classList.add("sel");}
+  updateEmoCount();
+}
+function updateEmoCount(){
+  const n=selectedEmos.size;
+  const el=document.getElementById("emo-count");
+  if(n<3)el.textContent=n+" selected — need "+(3-n)+" more";
+  else el.textContent=n+" selected ✓";
+  el.style.color=n>=3?"#22c55e":"var(--muted)";
+  el.style.borderColor=n>=3?"rgba(34,197,94,0.3)":"var(--border)";
+}
+function renderInvInputs(key){
+  const w=document.getElementById(key+"-inputs");
+  if(!w)return;
+  w.innerHTML="";
+  const ex=invData[key]||["","","",""];
+  for(let i=0;i<4;i++){
+    const row=document.createElement("div");
+    const inp=document.createElement("input");
+    inp.className="inv-inp";
+    inp.type="text";
+    inp.value=ex[i]||"";
+    inp.placeholder=i<3?"Write your own or tap a suggestion...":"Optional fourth item...";
+    inp.dataset.cat=key;
+    inp.dataset.idx=i;
+    inp.oninput=function(){saveInv(this);};
+    row.appendChild(inp);
+    w.appendChild(row);
+  }
+}
+function addSug(key,text,btn){
+  if(!invData[key])invData[key]=["","","",""];
+  const idx=invData[key].findIndex((v,i)=>i<4&&!v.trim());
+  if(idx===-1)return;
+  invData[key][idx]=text;
+  btn.style.opacity="0.3";
+  btn.style.pointerEvents="none";
+  renderInvInputs(key);
+}
+function saveInv(el){
+  const k=el.dataset.cat,i=parseInt(el.dataset.idx);
+  if(!invData[k])invData[k]=["","","",""];
+  invData[k][i]=el.value;
+}
+function submitInventory(){
+  if(selectedEmos.size<3){
+    const e=document.getElementById("inverr");
+    e.style.display="block";
+    e.textContent="Please select at least 3 emotions.";
+    return;
+  }
+  const errs=[];
+  INV_CATS.forEach(cat=>{
+    if((invData[cat.key]||[]).filter((v,i)=>i<3&&v.trim()).length<3)errs.push(cat.label);
+  });
+  if(errs.length){
+    const e=document.getElementById("inverr");
+    e.style.display="block";
+    e.textContent="Please fill in 3 items for: "+errs.join(", ");
+    return;
+  }
+  document.getElementById("inverr").style.display="none";
+  goTo(4);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   STEP 4 — WEIGHTS
+═══════════════════════════════════════════════════════════════ */
+function renderWeights(){
+  const w=document.getElementById("weights-wrap");
+  w.innerHTML="";
+  const secs=[
+    {key:"emotions",label:"Emotions",color:"#3B82F6",items:[...selectedEmos]},
+    ...INV_CATS.map(c=>({key:c.key,label:c.label,color:c.color,items:(invData[c.key]||[]).filter(v=>v&&v.trim())}))
+  ];
+  secs.forEach(sec=>{
+    if(!sec.items.length)return;
+    if(!wtData[sec.key]){
+      const eq=Math.floor(100/sec.items.length);
+      wtData[sec.key]=sec.items.map((_,i)=>i===sec.items.length-1?100-eq*(sec.items.length-1):eq);
+    }
+    const div=document.createElement("div");
+    div.className="wt-section";
+    const hdr=document.createElement("div");
+    hdr.className="wt-header";
+    hdr.innerHTML=`<div class="wt-header-label" style="color:${sec.color}">${sec.label}</div><div class="wt-total" id="wtot-${sec.key}" style="color:var(--muted)">100%</div>`;
+    div.appendChild(hdr);
+    const body=document.createElement("div");
+    body.className="wt-body";
+    body.id="wi-"+sec.key;
+    div.appendChild(body);
+    const msg=document.createElement("div");
+    msg.id="wm-"+sec.key;
+    msg.style.cssText="padding:0 1.1rem 0.6rem;font-size:.72rem";
+    div.appendChild(msg);
+    w.appendChild(div);
+    sec.items.forEach((item,i)=>{
+      const row=document.createElement("div");
+      row.className="wt-row";
+      const lbl=document.createElement("div");
+      lbl.className="wt-label";
+      lbl.title=item;
+      lbl.textContent=item;
+      const slider=document.createElement("input");
+      slider.type="range";
+      slider.style.flex="1.2";
+      slider.min=0;slider.max=100;slider.step=1;
+      slider.value=wtData[sec.key][i];
+      const pct=document.createElement("div");
+      pct.className="wt-pct";
+      pct.id="wp-"+sec.key+"-"+i;
+      pct.textContent=wtData[sec.key][i]+"%";
+      slider.oninput=function(){updateWt(sec.key,i,this.value);};
+      row.appendChild(lbl);row.appendChild(slider);row.appendChild(pct);
+      body.appendChild(row);
+    });
+    updateWtDisp(sec.key);
+  });
+}
+function updateWt(k,i,v){
+  wtData[k][i]=parseInt(v);
+  document.getElementById("wp-"+k+"-"+i).textContent=v+"%";
+  updateWtDisp(k);
+}
+function updateWtDisp(k){
+  const sum=(wtData[k]||[]).reduce((a,b)=>a+b,0);
+  const t=document.getElementById("wtot-"+k);
+  const m=document.getElementById("wm-"+k);
+  if(!t)return;
+  t.textContent="Total: "+sum+"%";
+  const ok=Math.abs(sum-100)<=2;
+  t.style.color=ok?"#22c55e":"#F59E0B";
+  m.innerHTML=ok
+    ?`<span style="color:#22c55e">Total is ${sum}% ✓</span>`
+    :`<span style="color:#F59E0B">Adjust sliders to reach 100% (currently ${sum}%)</span>`;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   STEP 5 — RESULTS
+═══════════════════════════════════════════════════════════════ */
+function generateResults(){
+  const bad=[];
+  ["emotions",...INV_CATS.map(c=>c.key)].forEach(k=>{
+    if(!wtData[k])return;
+    if(Math.abs((wtData[k]||[]).reduce((a,b)=>a+b,0)-100)>2)bad.push(k);
+  });
+  if(bad.length){
+    const e=document.getElementById("wterr");
+    e.style.display="block";
+    e.textContent="Please adjust sliders to 100% for: "+bad.join(", ");
+    return;
+  }
+  document.getElementById("wterr").style.display="none";
+  buildResults();
+  goTo(5);
+}
+function getDimPcts(){
+  const p={};
+  DIMS.forEach(d=>{
+    const s=QS.map((q,i)=>q.dim===d.key?qa[i]||0:0).reduce((a,b)=>a+b,0);
+    p[d.key]=Math.round(s/d.max*100);
+  });
+  return p;
+}
+function scoreArchetypes(){
+  const dp=getDimPcts();
+  const e=[...selectedEmos];
+  return ARCHETYPES.map(a=>({...a,arcScore:a.score(dp,e,invData)})).sort((a,b)=>b.arcScore-a.arcScore);
+}
+function getLevel(s){
+  if(s<=20)return{label:"Early warning",color:"#0D7377"};
+  if(s<=30)return{label:"Moderate burnout",color:"#3B82F6"};
+  if(s<=40)return{label:"Significant burnout",color:"#E8401C"};
+  return{label:"Severe burnout",color:"#A855F7"};
+}
 function buildResults(){
   const total=Object.values(qa).reduce((a,b)=>a+b,0);
-  const level=getLevel(total);const dp=getDimPcts();
-  const scored=scoreArchetypes();const primary=scored[0];const secondary=scored[1];
-  const gap=primary.arcScore-secondary.arcScore;const showSec=gap<=20&&secondary.arcScore>=30;
-  const topItems=INV_CATS.flatMap(cat=>{const items=(invData[cat.key]||[]).filter(v=>v&&v.trim());return items.map((item,i)=>({label:item,color:cat.color,weight:wtData[cat.key]?.[i]||0}));}).sort((a,b)=>b.weight-a.weight).slice(0,6);
-  const domEmo=[...selectedEmos].reduce((best,e,i)=>{const w=wtData.emotions?.[i]||0;return w>best.w?{e,w}:best;},{e:"",w:0});
+  const level=getLevel(total);
+  const dp=getDimPcts();
+  const scored=scoreArchetypes();
+  const primary=scored[0];
+  const secondary=scored[1];
+  const gap=primary.arcScore-secondary.arcScore;
+  const showSec=gap<=20&&secondary.arcScore>=30;
+  const domEmo=[...selectedEmos].reduce((best,e,i)=>{
+    const w=wtData.emotions?.[i]||0;
+    return w>best.w?{e,w}:best;
+  },{e:"",w:0});
   const emos=[...selectedEmos].join(", ");
-  let html="<div style='margin-bottom:1.25rem'><div style='font-size:.7rem;color:#6B7280;margin-bottom:3px;text-transform:uppercase;letter-spacing:.08em'>Overall severity</div><div style='display:flex;align-items:baseline;gap:8px'><div style='font-size:2.8rem;font-weight:700;color:"+level.color+";line-height:1'>"+total+"</div><div style='font-size:1rem;color:#6B7280'>/50</div><div style='font-size:.85rem;font-weight:700;color:"+level.color+";margin-left:4px'>"+level.label+"</div></div></div>";
-  html+="<div class='arc-card'><div class='arc-badge' style='background:"+primary.color+"22;color:"+primary.color+"'>Primary archetype</div><div class='arc-name' style='color:"+primary.color+"'>"+primary.name+"</div><div class='arc-tagline'>"+primary.tagline+"</div><div class='arc-desc'>"+primary.desc+"</div></div>";
-  if(showSec)html+="<div class='arc-card'><div class='arc-badge' style='background:"+secondary.color+"22;color:"+secondary.color+"'>Secondary archetype</div><div class='arc-name' style='font-size:1.1rem;color:"+secondary.color+"'>"+secondary.name+"</div><div class='arc-tagline'>"+secondary.tagline+"</div></div>";
-  html+="<div style='font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#6B7280;margin:1rem 0 .5rem'>Archetype scores</div>";
-  scored.forEach(a=>{html+="<div class='arc-score-bar'><div class='arc-score-label'>"+a.name+"</div><div class='arc-score-track'><div class='arc-score-fill' style='width:"+a.arcScore+"%;background:"+a.color+"'></div></div><div class='arc-score-val'>"+a.arcScore+"</div></div>";});
-  html+="<div style='font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#6B7280;margin:1rem 0 .5rem'>Burnout dimensions</div><div class='dim-grid'>";
-  DIMS.forEach(d=>{html+="<div class='dim-card' style='border-left-color:"+d.color+"'><div class='dim-label'>"+d.short+"</div><div class='dim-pct' style='color:"+d.color+"'>"+dp[d.key]+"%</div><div class='bar-track'><div class='bar-fill' style='width:"+dp[d.key]+"%;background:"+d.color+"'></div></div></div>";});
-  html+="</div><div class='insight' style='border-left-color:"+primary.color+"'><div class='insight-t'>Your dominant emotion</div><div class='insight-d'>You weighted "+(domEmo.e||[...selectedEmos][0])+" highest. All emotions: "+emos+".</div></div>";
-  html+="<div style='font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#6B7280;margin:1rem 0 .5rem'>Your 30-day arc</div><div class='week-grid'>";
-  primary.weeks.forEach((w,i)=>{html+="<div class='week-card'><div class='week-n'>Week "+(i+1)+"</div><div class='week-theme' style='color:"+primary.color+"'>"+w.t+"</div><div class='week-focus'>"+w.f+"</div></div>";});
-  html+="</div><div style='font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#6B7280;margin:1rem 0 .5rem'>Techniques matched to you</div><div style='margin-bottom:1.25rem'>";
-  primary.techniques.forEach(t=>{html+="<span class='tech-chip'>"+t+"</span>";});
-  html+="</div><hr><div class='buy-section'><div class='buy-title'>Get your personalized 30-day guide</div><div class='buy-desc'>15 pages built specifically for "+primary.name+". Structured daily schedule, emergency protocols, 6 matched techniques, your pattern card with specific interrupts.</div><a class='buy-btn' href='"+PAYHIP_URLS[primary.id]+"' target='_blank'>"+primary.name+" Guide — $14.99 &#8599;</a></div>";
+
+  let html=`
+    <div class="step-label" style="margin-bottom:.75rem">Your burnout profile</div>
+
+    <div class="result-header">
+      <div class="severity-label">Overall severity score</div>
+      <div class="severity-row">
+        <div class="severity-score" style="color:${level.color}">${total}</div>
+        <div class="severity-denom">/50</div>
+        <div class="severity-tag" style="background:${level.color}22;color:${level.color}">${level.label}</div>
+      </div>
+    </div>
+
+    <div class="arc-card" style="border-top-color:${primary.color}">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:${primary.color}"></div>
+      <div class="arc-badge" style="background:${primary.color}22;color:${primary.color}">Primary archetype</div>
+      <div class="arc-name" style="color:${primary.color}">${primary.name}</div>
+      <div class="arc-tagline">${primary.tagline}</div>
+      <div class="arc-desc">${primary.desc}</div>
+    </div>`;
+
+  if(showSec){
+    html+=`
+    <div class="arc-card">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:${secondary.color}"></div>
+      <div class="arc-badge" style="background:${secondary.color}22;color:${secondary.color}">Secondary archetype</div>
+      <div class="arc-name" style="font-size:1.1rem;color:${secondary.color}">${secondary.name}</div>
+      <div class="arc-tagline">${secondary.tagline}</div>
+    </div>`;
+  }
+
+  html+=`<div class="section-eyebrow">Archetype scores</div>`;
+  scored.forEach(a=>{
+    html+=`<div class="arc-score-bar">
+      <div class="arc-score-label">${a.name}</div>
+      <div class="arc-score-track"><div class="arc-score-fill" style="width:${a.arcScore}%;background:${a.color}"></div></div>
+      <div class="arc-score-val">${a.arcScore}</div>
+    </div>`;
+  });
+
+  html+=`<div class="section-eyebrow">Burnout dimensions</div><div class="dim-grid">`;
+  DIMS.forEach(d=>{
+    html+=`<div class="dim-card" style="border-left-color:${d.color}">
+      <div class="dim-label">${d.short}</div>
+      <div class="dim-pct" style="color:${d.color}">${dp[d.key]}%</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${dp[d.key]}%;background:${d.color}"></div></div>
+    </div>`;
+  });
+  html+=`</div>`;
+
+  html+=`
+    <div class="insight" style="border-left-color:${primary.color}">
+      <div class="insight-t">Your dominant emotion</div>
+      <div class="insight-d">You weighted <strong style="color:${primary.color}">${domEmo.e||[...selectedEmos][0]}</strong> highest. All emotions: ${emos}.</div>
+    </div>`;
+
+  html+=`<div class="section-eyebrow">Your 30-day arc</div><div class="week-grid">`;
+  primary.weeks.forEach((wk,i)=>{
+    html+=`<div class="week-card">
+      <div class="week-n">Week ${i+1}</div>
+      <div class="week-theme" style="color:${primary.color}">${wk.t}</div>
+      <div class="week-focus">${wk.f}</div>
+    </div>`;
+  });
+  html+=`</div>`;
+
+  html+=`<div class="section-eyebrow">Techniques matched to you</div><div style="margin-bottom:1.25rem">`;
+  primary.techniques.forEach(t=>{html+=`<span class="tech-chip">${t}</span>`;});
+  html+=`</div>`;
+
+  html+=`
+    <div class="buy-section">
+      <div class="buy-title">Get your personalized 30-day guide</div>
+      <div class="buy-desc">15 pages built specifically for <strong>${primary.name}</strong>. Structured daily schedule with exact times, emergency protocols for overwhelm and anxiety spikes, 6 matched techniques, and your pattern card with specific interrupts.</div>
+      <a class="buy-btn" href="${PAYHIP_URLS[primary.id]}" target="_blank">
+        ${primary.name} Guide — $14.99 ↗
+      </a>
+      <div class="buy-guarantee">
+        ✓ Instant download &nbsp;·&nbsp; ✓ PDF format &nbsp;·&nbsp; ✓ Built for your archetype
+      </div>
+    </div>`;
+
   document.getElementById("results-content").innerHTML=html;
 }
 </script>
