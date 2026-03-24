@@ -130,7 +130,8 @@
     }
     .nav-cta:hover { background: #c73518; transform: translateY(-1px); }
     .nav-mobile-toggle { display: none; flex-direction: column; gap: 5px; padding: 4px; }
-    .nav-mobile-toggle span { display: block; width: 22px; height: 2px; background: var(--white); border-radius: 2px; }
+    .nav-mobile-toggle span { display: block; width: 22px; height: 2px; background: var(--white); border-radius: 2px; transition: opacity 0.2s; }
+    .nav-mobile-cta-link { display: none; }
 
     /* ── HERO ──────────────────────────────────────────────────────────── */
     .hero {
@@ -941,20 +942,63 @@
       .stats-inner { grid-template-columns: repeat(2, 1fr); }
       .steps { grid-template-columns: 1fr; }
       .products-grid { grid-template-columns: repeat(2, 1fr); }
+      .product-cover { aspect-ratio: 4/3; }
       .inside-grid { grid-template-columns: 1fr; gap: 40px; }
       .testimonials { grid-template-columns: 1fr; }
       .faq-grid { grid-template-columns: 1fr; }
       .footer-top { grid-template-columns: 1fr 1fr; gap: 32px; }
       .assessment-header { grid-template-columns: 1fr; }
     }
-    @media (max-width: 600px) {
-      .products-grid { grid-template-columns: 1fr; }
+    /* Hamburger breakpoint — hides nav links + long CTA button */
+    @media (max-width: 768px) {
       .nav-links { display: none; }
       .nav-mobile-toggle { display: flex; }
+      .nav-cta { display: none; }
+      /* Mobile dropdown panel */
+      .nav-links.mobile-open {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 64px; left: 0; right: 0;
+        background: rgba(13,13,13,0.98);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border);
+        padding: 20px 24px 28px;
+        gap: 18px;
+        z-index: 99;
+      }
+      .nav-links.mobile-open a { font-size: 16px; color: var(--light); }
+      /* Show the in-menu CTA link */
+      .nav-mobile-cta-link { display: block !important; }
+      .nav-mobile-cta-link a,
+      .nav-links.mobile-open .nav-mobile-cta-link {
+        color: var(--red) !important;
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 15px !important;
+        padding: 10px 0 0;
+        border-top: 1px solid var(--border);
+      }
+    }
+    @media (max-width: 600px) {
+      .products-grid { grid-template-columns: 1fr; }
+      .product-cover { aspect-ratio: 3/2; }
       .footer-top { grid-template-columns: 1fr; }
       .final-cta-box { padding: 40px 24px; }
-      .hero { padding: 110px 0 64px; }
+      .hero { padding: 110px 0 60px; }
+      .hero-sub { font-size: 16px; }
       .stats-inner { grid-template-columns: 1fr 1fr; }
+      .stat-number { font-size: 28px; }
+      .section-sub { font-size: 15px; }
+      .footer-bottom { flex-direction: column; align-items: flex-start; gap: 14px; }
+      .assessment-embed iframe { height: 820px; }
+      .container { padding: 0 16px; }
+      .how { padding: 72px 0; }
+      .archetypes { padding: 72px 0; }
+      .proof { padding: 72px 0; }
+      .faq { padding: 72px 0; }
+      .final-cta { padding: 72px 0; }
     }
   </style>
 </head>
@@ -974,6 +1018,7 @@
       <a href="#assessment" role="listitem">Free assessment</a>
       <a href="#guides" role="listitem">Guides</a>
       <a href="#faq" role="listitem">FAQ</a>
+      <span class="nav-mobile-cta-link" role="listitem"><a href="#assessment">Take free assessment →</a></span>
     </div>
     <a href="#assessment" class="nav-cta">Take the free assessment</a>
     <button class="nav-mobile-toggle" aria-label="Open menu" onclick="toggleMobileMenu()">
@@ -1540,28 +1585,28 @@
     }
   }
 
-  // Mobile menu toggle — simple show/hide of nav links
+  // Mobile menu toggle
   function toggleMobileMenu() {
     const links = document.querySelector('.nav-links');
-    const isVisible = links.style.display === 'flex';
-    links.style.display = isVisible ? 'none' : 'flex';
-    links.style.flexDirection = 'column';
-    links.style.position = 'absolute';
-    links.style.top = '64px';
-    links.style.left = '0';
-    links.style.right = '0';
-    links.style.background = 'var(--ink)';
-    links.style.borderBottom = '1px solid var(--border)';
-    links.style.padding = '16px 24px 20px';
-    links.style.gap = '14px';
+    const btn = document.querySelector('.nav-mobile-toggle');
+    const isOpen = links.classList.contains('mobile-open');
+    links.classList.toggle('mobile-open', !isOpen);
+    btn.setAttribute('aria-expanded', String(!isOpen));
   }
 
   // Close mobile menu on link click
   document.querySelectorAll('.nav-links a').forEach(link => {
     link.addEventListener('click', () => {
       const links = document.querySelector('.nav-links');
-      if (window.innerWidth < 600) links.style.display = 'none';
+      if (window.innerWidth <= 768) links.classList.remove('mobile-open');
     });
+  });
+
+  // Close mobile menu on outside click
+  document.addEventListener('click', (e) => {
+    const nav = document.querySelector('.nav');
+    const links = document.querySelector('.nav-links');
+    if (!nav.contains(e.target)) links.classList.remove('mobile-open');
   });
 
   // Smooth scroll offset for fixed nav
