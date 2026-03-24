@@ -1,0 +1,1618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Self Beacon — Find Your Burnout Archetype. Fix It in 30 Days.</title>
+  <meta name="description" content="Free 8-minute burnout assessment. Identifies your archetype and pattern. Personalized 30-day guide — $14.99.">
+  <meta property="og:title" content="Self Beacon — Find Your Burnout Archetype">
+  <meta property="og:description" content="Free burnout assessment. 6 archetypes. Personalized 30-day guide.">
+  <meta property="og:image" content="C:\Users\admin\Desktop\burnout-reset\og_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+  <style>
+    /* ── Reset & base ──────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ink:    #0D0D0D;
+      --char:   #1A1A1A;
+      --panel:  #141414;
+      --border: rgba(255,255,255,0.08);
+      --mid:    #4B5563;
+      --muted:  #6B7280;
+      --light:  #9CA3AF;
+      --white:  #FFFFFF;
+      --off:    #F9FAFB;
+      /* Archetype accents */
+      --red:    #E8401C;
+      --blue:   #1D4ED8;
+      --purple: #6D28D9;
+      --teal:   #0D7377;
+      --amber:  #B45309;
+      --gray:   #4B5563;
+      /* Layout */
+      --max:    1160px;
+      --r:      10px;
+      --font-display: 'Syne', sans-serif;
+      --font-body:    'DM Sans', sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--ink);
+      color: var(--white);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    img { display: block; max-width: 100%; }
+    a { color: inherit; text-decoration: none; }
+    button { cursor: pointer; border: none; background: none; font: inherit; }
+
+    /* ── Utility ───────────────────────────────────────────────────────── */
+    .container { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
+    .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+
+    /* ── Animations ────────────────────────────────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; } to { opacity: 1; }
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; } 50% { opacity: 0.6; }
+    }
+    .anim-1 { animation: fadeUp 0.7s ease both; }
+    .anim-2 { animation: fadeUp 0.7s 0.12s ease both; }
+    .anim-3 { animation: fadeUp 0.7s 0.24s ease both; }
+    .anim-4 { animation: fadeUp 0.7s 0.36s ease both; }
+
+    /* ── NAV ───────────────────────────────────────────────────────────── */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(13,13,13,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: var(--max); margin: 0 auto; padding: 0 24px;
+      height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 10px;
+    }
+    .nav-logo-mark {
+      width: 32px; height: 32px;
+      background: var(--red);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      /* REPLACE: swap this for your actual logo image */
+    }
+    .nav-logo-mark::after {
+      content: 'SB';
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 800;
+      color: white;
+    }
+    .nav-logo-name {
+      font-family: var(--font-display);
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+    .nav-links {
+      display: flex; align-items: center; gap: 28px;
+    }
+    .nav-links a {
+      font-size: 14px;
+      color: var(--light);
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--white); }
+    .nav-cta {
+      padding: 9px 20px;
+      background: var(--red);
+      border-radius: var(--r);
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 700;
+      color: white;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .nav-cta:hover { background: #c73518; transform: translateY(-1px); }
+    .nav-mobile-toggle { display: none; flex-direction: column; gap: 5px; padding: 4px; }
+    .nav-mobile-toggle span { display: block; width: 22px; height: 2px; background: var(--white); border-radius: 2px; }
+
+    /* ── HERO ──────────────────────────────────────────────────────────── */
+    .hero {
+      padding: 140px 0 100px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 70% 40%, rgba(232,64,28,0.08) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 60% at 20% 80%, rgba(13,115,119,0.06) 0%, transparent 70%);
+    }
+    /* Subtle grid pattern */
+    .hero-bg::after {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black 0%, transparent 100%);
+    }
+    .hero-inner {
+      position: relative; z-index: 1;
+      max-width: var(--max); margin: 0 auto; padding: 0 24px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 14px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--light);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+    }
+    .hero-eyebrow-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--red);
+      animation: pulse 2s ease infinite;
+    }
+    .hero-h1 {
+      font-family: var(--font-display);
+      font-size: clamp(40px, 5vw, 60px);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      margin-bottom: 24px;
+    }
+    .hero-h1 em {
+      font-style: normal;
+      color: var(--red);
+    }
+    .hero-sub {
+      font-size: 18px;
+      font-weight: 300;
+      color: var(--light);
+      line-height: 1.65;
+      margin-bottom: 36px;
+      max-width: 440px;
+    }
+    .hero-actions {
+      display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+    }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 14px 28px;
+      background: var(--red);
+      border-radius: var(--r);
+      font-family: var(--font-display);
+      font-size: 15px;
+      font-weight: 700;
+      color: white;
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    }
+    .btn-primary:hover {
+      background: #c73518;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(232,64,28,0.3);
+    }
+    .btn-primary svg { width: 16px; height: 16px; flex-shrink: 0; }
+    .btn-ghost {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 14px 24px;
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      font-size: 14px;
+      color: var(--light);
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-ghost:hover { border-color: rgba(255,255,255,0.25); color: var(--white); }
+    .hero-social-proof {
+      margin-top: 36px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .hero-avatars {
+      display: flex;
+    }
+    .hero-avatar {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      border: 2px solid var(--ink);
+      background: var(--mid);
+      margin-left: -8px;
+      font-family: var(--font-display);
+      font-size: 10px;
+      font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--white);
+    }
+    .hero-avatar:first-child { margin-left: 0; }
+    .hero-avatars-col { background: var(--red); }
+    .hero-avatars-teal { background: var(--teal); }
+    .hero-avatars-blue { background: var(--blue); }
+    .hero-proof-text { font-size: 13px; color: var(--muted); }
+    .hero-proof-text strong { color: var(--white); font-weight: 500; }
+
+    /* Hero right — assessment preview card */
+    .hero-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.5);
+    }
+    .hero-card-header {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .hero-card-dots {
+      display: flex; gap: 6px;
+    }
+    .hero-card-dots span {
+      width: 10px; height: 10px; border-radius: 50%;
+    }
+    .hero-card-dots span:nth-child(1) { background: #FF5F57; }
+    .hero-card-dots span:nth-child(2) { background: #FFBD2E; }
+    .hero-card-dots span:nth-child(3) { background: #28C840; }
+    .hero-card-label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-left: 4px;
+    }
+    .hero-card-preview {
+      padding: 28px 24px;
+    }
+    .hero-preview-tag {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+    .hero-preview-title {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 20px;
+    }
+    .hero-preview-bars {
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .hero-preview-bar-row {
+      display: flex; align-items: center; gap: 10px;
+    }
+    .hero-preview-bar-label {
+      font-size: 11px;
+      color: var(--muted);
+      width: 88px;
+      flex-shrink: 0;
+    }
+    .hero-preview-bar-track {
+      flex: 1; height: 6px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 3px; overflow: hidden;
+    }
+    .hero-preview-bar-fill {
+      height: 100%; border-radius: 3px;
+      transition: width 1s ease;
+    }
+    .hero-preview-badge {
+      margin-top: 20px;
+      padding: 12px 16px;
+      background: rgba(232,64,28,0.12);
+      border: 1px solid rgba(232,64,28,0.2);
+      border-radius: 8px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .hero-preview-badge-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--red); flex-shrink: 0;
+    }
+    .hero-preview-badge-text {
+      font-size: 13px; font-weight: 500; color: var(--red);
+    }
+
+    /* ── SECTION LABELS ────────────────────────────────────────────────── */
+    .section-label {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    /* ── STATS STRIP ───────────────────────────────────────────────────── */
+    .stats {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 40px 0;
+    }
+    .stats-inner {
+      max-width: var(--max); margin: 0 auto; padding: 0 24px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+    }
+    .stat-item {
+      text-align: center;
+    }
+    .stat-number {
+      font-family: var(--font-display);
+      font-size: 36px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--white);
+    }
+    .stat-label {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    /* ── HOW IT WORKS ──────────────────────────────────────────────────── */
+    .how {
+      padding: 100px 0;
+    }
+    .how-header {
+      text-align: center;
+      margin-bottom: 64px;
+    }
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+    }
+    .section-sub {
+      font-size: 17px;
+      color: var(--light);
+      font-weight: 300;
+      margin-top: 14px;
+      max-width: 480px;
+      margin-left: auto; margin-right: auto;
+    }
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .step {
+      background: var(--panel);
+      padding: 40px 32px;
+      position: relative;
+    }
+    .step-num {
+      font-family: var(--font-display);
+      font-size: 64px;
+      font-weight: 800;
+      color: rgba(255,255,255,0.05);
+      line-height: 1;
+      margin-bottom: 20px;
+      letter-spacing: -0.04em;
+    }
+    .step-icon {
+      width: 44px; height: 44px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+    }
+    .step-icon-1 { background: rgba(232,64,28,0.12); }
+    .step-icon-2 { background: rgba(13,115,119,0.12); }
+    .step-icon-3 { background: rgba(109,40,217,0.12); }
+    .step-title {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .step-desc {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+    .step-tag {
+      margin-top: 20px;
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+    .step-tag-free { background: rgba(232,64,28,0.12); color: var(--red); }
+    .step-tag-result { background: rgba(13,115,119,0.12); color: var(--teal); }
+    .step-tag-price { background: rgba(109,40,217,0.12); color: #a78bfa; }
+
+    /* ── ASSESSMENT SECTION ────────────────────────────────────────────── */
+    .assessment {
+      padding: 80px 0;
+      background: var(--panel);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .assessment-inner {
+      max-width: var(--max); margin: 0 auto; padding: 0 24px;
+    }
+    .assessment-header {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: end;
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+    .assessment-embed {
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: var(--ink);
+    }
+    .assessment-embed iframe {
+      display: block;
+      width: 100%;
+      height: 920px;
+      border: none;
+    }
+    .assessment-note {
+      text-align: center;
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 16px;
+    }
+
+    /* ── ARCHETYPES GRID ───────────────────────────────────────────────── */
+    .archetypes {
+      padding: 100px 0;
+    }
+    .archetypes-header {
+      text-align: center;
+      margin-bottom: 56px;
+    }
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .product-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+      display: flex; flex-direction: column;
+    }
+    .product-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(255,255,255,0.14);
+      box-shadow: 0 20px 48px rgba(0,0,0,0.4);
+    }
+    .product-cover {
+      aspect-ratio: 1;
+      overflow: hidden;
+      position: relative;
+      background: var(--char);
+    }
+    .product-cover img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+    .product-card:hover .product-cover img {
+      transform: scale(1.03);
+    }
+    /* Placeholder when no image */
+    .product-cover-placeholder {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .product-body {
+      padding: 20px;
+      flex: 1;
+      display: flex; flex-direction: column;
+    }
+    .product-archetype-badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-bottom: 10px;
+    }
+    .product-title {
+      font-family: var(--font-display);
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 8px;
+    }
+    .product-subtitle {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+      flex: 1;
+    }
+    .product-footer {
+      display: flex; align-items: center;
+      justify-content: space-between;
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+    }
+    .product-price {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+    .product-buy {
+      padding: 9px 18px;
+      border-radius: 8px;
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 700;
+      color: white;
+      transition: opacity 0.2s, transform 0.15s;
+    }
+    .product-buy:hover { opacity: 0.88; transform: translateY(-1px); }
+
+    /* Per-archetype accent colours */
+    .acc-gray   { --acc: var(--gray);   --acc-bg: rgba(75,85,99,0.15);   }
+    .acc-red    { --acc: var(--red);    --acc-bg: rgba(232,64,28,0.15);  }
+    .acc-blue   { --acc: var(--blue);   --acc-bg: rgba(29,78,216,0.15);  }
+    .acc-purple { --acc: var(--purple); --acc-bg: rgba(109,40,217,0.15); }
+    .acc-teal   { --acc: var(--teal);   --acc-bg: rgba(13,115,119,0.15); }
+    .acc-amber  { --acc: var(--amber);  --acc-bg: rgba(180,83,9,0.15);   }
+
+    .product-card .product-archetype-badge {
+      background: var(--acc-bg); color: var(--acc);
+    }
+    .product-card .product-price { color: var(--acc); }
+    .product-card .product-buy { background: var(--acc); }
+
+    /* ── WHAT'S INSIDE ─────────────────────────────────────────────────── */
+    .inside {
+      padding: 100px 0;
+      background: var(--panel);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .inside-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+    .inside-list {
+      display: flex; flex-direction: column; gap: 16px;
+      margin-top: 32px;
+    }
+    .inside-item {
+      display: flex; gap: 16px; align-items: flex-start;
+    }
+    .inside-icon {
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      background: rgba(232,64,28,0.12);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    .inside-item-text h4 {
+      font-family: var(--font-display);
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 3px;
+    }
+    .inside-item-text p {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+    .inside-visual {
+      position: relative;
+    }
+    .inside-card {
+      background: var(--ink);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+    }
+    .inside-card-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+    .inside-weeks {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .inside-week {
+      padding: 14px;
+      border-radius: 10px;
+      border-left: 3px solid;
+    }
+    .inside-week:nth-child(1) { background: rgba(232,64,28,0.08); border-color: var(--red); }
+    .inside-week:nth-child(2) { background: rgba(13,115,119,0.08); border-color: var(--teal); }
+    .inside-week:nth-child(3) { background: rgba(180,83,9,0.08); border-color: var(--amber); }
+    .inside-week:nth-child(4) { background: rgba(109,40,217,0.08); border-color: var(--purple); }
+    .inside-week-num {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+    .inside-week-theme {
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+    .inside-week-focus {
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .inside-emergency {
+      margin-top: 12px;
+      padding: 16px;
+      background: rgba(232,64,28,0.08);
+      border: 1px solid rgba(232,64,28,0.2);
+      border-radius: 10px;
+    }
+    .inside-emergency-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 6px;
+    }
+    .inside-emergency-text {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* ── SOCIAL PROOF ──────────────────────────────────────────────────── */
+    .proof {
+      padding: 100px 0;
+    }
+    .proof-header { text-align: center; margin-bottom: 56px; }
+    .testimonials {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .testimonial {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      display: flex; flex-direction: column; gap: 16px;
+    }
+    .testimonial-stars {
+      display: flex; gap: 3px;
+    }
+    .testimonial-stars span {
+      color: #FBBF24;
+      font-size: 14px;
+    }
+    .testimonial-text {
+      font-size: 15px;
+      color: var(--light);
+      line-height: 1.65;
+      font-style: italic;
+      flex: 1;
+    }
+    .testimonial-author {
+      display: flex; align-items: center; gap: 10px;
+    }
+    .testimonial-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 700;
+      color: white;
+    }
+    .testimonial-name {
+      font-weight: 500; font-size: 14px;
+    }
+    .testimonial-handle {
+      font-size: 12px; color: var(--muted);
+    }
+    .testimonial-archetype {
+      margin-top: 2px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    /* ── FAQ ───────────────────────────────────────────────────────────── */
+    .faq {
+      padding: 100px 0;
+      background: var(--panel);
+      border-top: 1px solid var(--border);
+    }
+    .faq-header { text-align: center; margin-bottom: 56px; }
+    .faq-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      max-width: 880px;
+      margin: 0 auto;
+    }
+    .faq-item {
+      background: var(--ink);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .faq-q {
+      width: 100%; text-align: left;
+      padding: 18px 20px;
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 12px;
+      font-family: var(--font-display);
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--white);
+      background: none;
+      transition: background 0.15s;
+    }
+    .faq-q:hover { background: rgba(255,255,255,0.02); }
+    .faq-q svg {
+      width: 16px; height: 16px;
+      flex-shrink: 0;
+      color: var(--muted);
+      transition: transform 0.2s;
+    }
+    .faq-item.open .faq-q svg { transform: rotate(45deg); }
+    .faq-a {
+      max-height: 0; overflow: hidden;
+      transition: max-height 0.3s ease, padding 0.2s;
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.65;
+      padding: 0 20px;
+    }
+    .faq-item.open .faq-a {
+      max-height: 300px;
+      padding: 0 20px 18px;
+    }
+
+    /* ── FINAL CTA ─────────────────────────────────────────────────────── */
+    .final-cta {
+      padding: 100px 0;
+    }
+    .final-cta-box {
+      max-width: 680px;
+      margin: 0 auto;
+      text-align: center;
+      padding: 64px 48px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .final-cta-box::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(232,64,28,0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .final-cta-box h2 {
+      font-family: var(--font-display);
+      font-size: clamp(28px, 4vw, 40px);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 16px;
+      position: relative;
+    }
+    .final-cta-box p {
+      font-size: 16px;
+      color: var(--light);
+      font-weight: 300;
+      margin-bottom: 32px;
+      position: relative;
+    }
+    .final-cta-actions {
+      display: flex; align-items: center; justify-content: center;
+      gap: 14px; flex-wrap: wrap;
+      position: relative;
+    }
+    .final-cta-note {
+      margin-top: 20px;
+      font-size: 13px;
+      color: var(--muted);
+      position: relative;
+    }
+
+    /* ── FOOTER ────────────────────────────────────────────────────────── */
+    .footer {
+      border-top: 1px solid var(--border);
+      padding: 60px 0 40px;
+    }
+    .footer-inner {
+      max-width: var(--max); margin: 0 auto; padding: 0 24px;
+    }
+    .footer-top {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 48px;
+    }
+    .footer-brand-desc {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.65;
+      margin-top: 12px;
+      max-width: 240px;
+    }
+    .footer-col-title {
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--light);
+      margin-bottom: 14px;
+    }
+    .footer-links {
+      display: flex; flex-direction: column; gap: 9px;
+      list-style: none;
+    }
+    .footer-links a {
+      font-size: 14px;
+      color: var(--muted);
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--white); }
+    .footer-bottom {
+      padding-top: 32px;
+      border-top: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 12px;
+    }
+    .footer-copy {
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .footer-legal {
+      display: flex; gap: 20px;
+    }
+    .footer-legal a {
+      font-size: 13px;
+      color: var(--muted);
+      transition: color 0.2s;
+    }
+    .footer-legal a:hover { color: var(--white); }
+
+    /* ── RESPONSIVE ────────────────────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .hero-inner { grid-template-columns: 1fr; gap: 48px; }
+      .hero-card { display: none; }
+      .hero-h1 { font-size: 38px; }
+      .stats-inner { grid-template-columns: repeat(2, 1fr); }
+      .steps { grid-template-columns: 1fr; }
+      .products-grid { grid-template-columns: repeat(2, 1fr); }
+      .inside-grid { grid-template-columns: 1fr; gap: 40px; }
+      .testimonials { grid-template-columns: 1fr; }
+      .faq-grid { grid-template-columns: 1fr; }
+      .footer-top { grid-template-columns: 1fr 1fr; gap: 32px; }
+      .assessment-header { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      .products-grid { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+      .nav-mobile-toggle { display: flex; }
+      .footer-top { grid-template-columns: 1fr; }
+      .final-cta-box { padding: 40px 24px; }
+      .hero { padding: 110px 0 64px; }
+      .stats-inner { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════
+     NAV
+══════════════════════════════════════════════════════════════ -->
+<nav class="nav" role="navigation" aria-label="Main navigation">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo" aria-label="Self Beacon home">
+      <!-- REPLACE: swap nav-logo-mark with <img src="YOUR_LOGO.png" alt="Self Beacon" width="32" height="32"> -->
+      <div class="nav-logo-mark" aria-hidden="true"></div>
+      <span class="nav-logo-name">Self Beacon</span>
+    </a>
+    <div class="nav-links" role="list">
+      <a href="#how-it-works" role="listitem">How it works</a>
+      <a href="#assessment" role="listitem">Free assessment</a>
+      <a href="#guides" role="listitem">Guides</a>
+      <a href="#faq" role="listitem">FAQ</a>
+    </div>
+    <a href="#assessment" class="nav-cta">Take the free assessment</a>
+    <button class="nav-mobile-toggle" aria-label="Open menu" onclick="toggleMobileMenu()">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════════
+     HERO
+══════════════════════════════════════════════════════════════ -->
+<section class="hero" aria-labelledby="hero-headline">
+  <div class="hero-bg" aria-hidden="true"></div>
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-eyebrow anim-1">
+        <span class="hero-eyebrow-dot" aria-hidden="true"></span>
+        Free assessment · 8 minutes · No signup
+      </div>
+      <h1 class="hero-h1 anim-2" id="hero-headline">
+        You're not lazy.<br>
+        You're <em>burnt out.</em><br>
+        Find out exactly why.
+      </h1>
+      <p class="hero-sub anim-3">
+        Six burnout archetypes. One free assessment.
+        A personalized 30-day guide built for your specific pattern — not generic wellness advice.
+      </p>
+      <div class="hero-actions anim-4">
+        <a href="#assessment" class="btn-primary">
+          <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M8 2l6 6-6 6M2 8h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Start free assessment
+        </a>
+        <a href="#guides" class="btn-ghost">View all guides</a>
+      </div>
+      <div class="hero-social-proof anim-4">
+        <div class="hero-avatars" aria-hidden="true">
+          <div class="hero-avatar hero-avatars-col">JM</div>
+          <div class="hero-avatar hero-avatars-teal">SK</div>
+          <div class="hero-avatar hero-avatars-blue">RL</div>
+          <div class="hero-avatar" style="background:var(--purple)">AW</div>
+        </div>
+        <p class="hero-proof-text">
+          <!-- REPLACE: update this number as you collect responses -->
+          <strong>Trusted by people</strong> who were tired of being told to meditate more
+        </p>
+      </div>
+    </div>
+
+    <!-- Preview card — decorative, shows assessment output -->
+    <div class="hero-card anim-3" aria-hidden="true">
+      <div class="hero-card-header">
+        <div class="hero-card-dots">
+          <span></span><span></span><span></span>
+        </div>
+        <span class="hero-card-label">selfbeacon.com/assessment</span>
+      </div>
+      <div class="hero-card-preview">
+        <div class="hero-preview-tag">Your burnout profile</div>
+        <div class="hero-preview-title">The Overextended</div>
+        <div class="hero-preview-bars">
+          <div class="hero-preview-bar-row">
+            <span class="hero-preview-bar-label">Overwhelm</span>
+            <div class="hero-preview-bar-track">
+              <div class="hero-preview-bar-fill" style="width:88%;background:var(--red)"></div>
+            </div>
+          </div>
+          <div class="hero-preview-bar-row">
+            <span class="hero-preview-bar-label">Physical</span>
+            <div class="hero-preview-bar-track">
+              <div class="hero-preview-bar-fill" style="width:72%;background:var(--purple)"></div>
+            </div>
+          </div>
+          <div class="hero-preview-bar-row">
+            <span class="hero-preview-bar-label">Emotional</span>
+            <div class="hero-preview-bar-track">
+              <div class="hero-preview-bar-fill" style="width:65%;background:var(--blue)"></div>
+            </div>
+          </div>
+          <div class="hero-preview-bar-row">
+            <span class="hero-preview-bar-label">Purpose</span>
+            <div class="hero-preview-bar-track">
+              <div class="hero-preview-bar-fill" style="width:44%;background:var(--teal)"></div>
+            </div>
+          </div>
+        </div>
+        <div class="hero-preview-badge">
+          <div class="hero-preview-badge-dot"></div>
+          <span class="hero-preview-badge-text">Guide matched → The Overextended Fix</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     STATS
+══════════════════════════════════════════════════════════════ -->
+<section class="stats" aria-label="Key facts">
+  <div class="stats-inner">
+    <div class="stat-item">
+      <div class="stat-number">6</div>
+      <div class="stat-label">Burnout archetypes identified</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">8 min</div>
+      <div class="stat-label">Free assessment, no signup</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">30</div>
+      <div class="stat-label">Days. One structured plan.</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">$14.99</div>
+      <div class="stat-label">Personalized guide, instant download</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     HOW IT WORKS
+══════════════════════════════════════════════════════════════ -->
+<section class="how" id="how-it-works" aria-labelledby="how-title">
+  <div class="container">
+    <div class="how-header">
+      <span class="section-label">How it works</span>
+      <h2 class="section-title" id="how-title">From burnt out to<br>a plan in 12 minutes.</h2>
+      <p class="section-sub">Free assessment. Instant archetype. Personalized guide ready to download.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num" aria-hidden="true">01</div>
+        <div class="step-icon step-icon-1" aria-hidden="true">🔍</div>
+        <h3 class="step-title">Take the free assessment</h3>
+        <p class="step-desc">10 questions across four burnout dimensions. Then name your emotions, triggers, and patterns. 8 minutes. No account needed.</p>
+        <span class="step-tag step-tag-free">100% free</span>
+      </div>
+      <div class="step">
+        <div class="step-num" aria-hidden="true">02</div>
+        <div class="step-icon step-icon-2" aria-hidden="true">🎯</div>
+        <h3 class="step-title">Get your archetype</h3>
+        <p class="step-desc">Your results reveal your primary burnout pattern — from six specific archetypes, each with its own loop, triggers, and recovery approach.</p>
+        <span class="step-tag step-tag-result">Instant result</span>
+      </div>
+      <div class="step">
+        <div class="step-num" aria-hidden="true">03</div>
+        <div class="step-icon step-icon-3" aria-hidden="true">📋</div>
+        <h3 class="step-title">Get your 30-day guide</h3>
+        <p class="step-desc">A personalized prescription built for your archetype. Daily schedule, emergency protocols, 6 matched techniques, and your pattern card. $14.99.</p>
+        <span class="step-tag step-tag-price">$14.99 · Instant download</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     ASSESSMENT EMBED
+══════════════════════════════════════════════════════════════ -->
+<section class="assessment" id="assessment" aria-labelledby="assessment-title">
+  <div class="assessment-inner">
+    <div class="assessment-header">
+      <div>
+        <span class="section-label">Free assessment</span>
+        <h2 class="section-title" id="assessment-title">Start here.</h2>
+        <p class="section-sub" style="margin:12px 0 0;text-align:left">Takes 8 minutes. Free. No signup required.</p>
+      </div>
+    </div>
+    <div class="assessment-embed">
+      <!-- REPLACE: swap this URL with your actual GitHub Pages assessment URL -->
+      <iframe
+        src="REPLACE_WITH_YOUR_GITHUB_PAGES_URL"
+        title="Self Beacon burnout assessment"
+        loading="lazy"
+        allow="fullscreen">
+      </iframe>
+    </div>
+    <p class="assessment-note">
+      Your answers are not stored or shared. The assessment runs entirely in your browser.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     PRODUCTS GRID
+══════════════════════════════════════════════════════════════ -->
+<section class="archetypes" id="guides" aria-labelledby="guides-title">
+  <div class="container">
+    <div class="archetypes-header">
+      <span class="section-label">The guides</span>
+      <h2 class="section-title" id="guides-title">Six archetypes.<br>One is yours.</h2>
+      <p class="section-sub">Take the free assessment above to find which guide matches your pattern.</p>
+    </div>
+    <div class="products-grid">
+
+      <!-- CARD 1: Early Burnout -->
+      <article class="product-card acc-gray">
+        <div class="product-cover">
+          <!-- REPLACE: swap src with your actual cover image path e.g. "covers/Cover_early.png" -->
+          <img src="REPLACE_WITH_COVER_EARLY.png" alt="The Early Warning Fix cover" loading="lazy">
+          <!-- Remove <img> and uncomment below if no image ready yet:
+          <div class="product-cover-placeholder">Early Burnout</div> -->
+        </div>
+        <div class="product-body">
+          <span class="product-archetype-badge">Archetype 01</span>
+          <h3 class="product-title">The Early Warning Fix:</h3>
+          <p class="product-subtitle">Your 30-Day Plan to Catch Burnout Early, Build Protection Habits & Stop the Drift Before It Deepens.</p>
+          <div class="product-footer">
+            <span class="product-price">$14.99</span>
+            <!-- REPLACE: swap href with your actual Payhip product URL -->
+            <a href="REPLACE_WITH_PAYHIP_EARLY_URL" class="product-buy" target="_blank" rel="noopener">Get guide →</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- CARD 2: Overextended -->
+      <article class="product-card acc-red">
+        <div class="product-cover">
+          <img src="REPLACE_WITH_COVER_OVEREXTENDED.png" alt="The Overextended Fix cover" loading="lazy">
+        </div>
+        <div class="product-body">
+          <span class="product-archetype-badge">Archetype 02</span>
+          <h3 class="product-title">The Overextended Fix:</h3>
+          <p class="product-subtitle">Your 30-Day Plan to Stop Saying Yes When You Mean No, Reclaim Your Energy & Break the Overcommitment Cycle.</p>
+          <div class="product-footer">
+            <span class="product-price">$14.99</span>
+            <a href="REPLACE_WITH_PAYHIP_OVEREXTENDED_URL" class="product-buy" target="_blank" rel="noopener">Get guide →</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- CARD 3: Numb One -->
+      <article class="product-card acc-blue">
+        <div class="product-cover">
+          <img src="REPLACE_WITH_COVER_NUMB.png" alt="The Numb One Fix cover" loading="lazy">
+        </div>
+        <div class="product-body">
+          <span class="product-archetype-badge">Archetype 03</span>
+          <h3 class="product-title">The Numb One Fix:</h3>
+          <p class="product-subtitle">Your 30-Day Plan to Feel Again, Reconnect With What Matters & Come Back From Emotional Detachment.</p>
+          <div class="product-footer">
+            <span class="product-price">$14.99</span>
+            <a href="REPLACE_WITH_PAYHIP_NUMB_URL" class="product-buy" target="_blank" rel="noopener">Get guide →</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- CARD 4: Exhausted Body -->
+      <article class="product-card acc-purple">
+        <div class="product-cover">
+          <img src="REPLACE_WITH_COVER_EXHAUSTED.png" alt="The Exhausted Body Fix cover" loading="lazy">
+        </div>
+        <div class="product-body">
+          <span class="product-archetype-badge">Archetype 04</span>
+          <h3 class="product-title">The Exhausted Body Fix:</h3>
+          <p class="product-subtitle">Your 30-Day Plan to Restore Energy, Improve Sleep & Nourish Your Body Back to Life.</p>
+          <div class="product-footer">
+            <span class="product-price">$14.99</span>
+            <a href="REPLACE_WITH_PAYHIP_EXHAUSTED_URL" class="product-buy" target="_blank" rel="noopener">Get guide →</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- CARD 5: Lost One -->
+      <article class="product-card acc-teal">
+        <div class="product-cover">
+          <img src="REPLACE_WITH_COVER_LOST.png" alt="The Lost One Fix cover" loading="lazy">
+        </div>
+        <div class="product-body">
+          <span class="product-archetype-badge">Archetype 05</span>
+          <h3 class="product-title">The Lost One Fix:</h3>
+          <p class="product-subtitle">Your 30-Day Plan to Rediscover Your Why, Reconnect With Your Values & Find Direction Again.</p>
+          <div class="product-footer">
+            <span class="product-price">$14.99</span>
+            <a href="REPLACE_WITH_PAYHIP_LOST_URL" class="product-buy" target="_blank" rel="noopener">Get guide →</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- CARD 6: Pressure Cooker -->
+      <article class="product-card acc-amber">
+        <div class="product-cover">
+          <img src="REPLACE_WITH_COVER_PRESSURE.png" alt="The Pressure Cooker Fix cover" loading="lazy">
+        </div>
+        <div class="product-body">
+          <span class="product-archetype-badge">Archetype 06</span>
+          <h3 class="product-title">The Pressure Cooker Fix:</h3>
+          <p class="product-subtitle">Your 30-Day Plan to Reduce the Load, Stabilise All Four Burnout Dimensions & Start Breathing Again.</p>
+          <div class="product-footer">
+            <span class="product-price">$14.99</span>
+            <a href="REPLACE_WITH_PAYHIP_PRESSURE_URL" class="product-buy" target="_blank" rel="noopener">Get guide →</a>
+          </div>
+        </div>
+      </article>
+
+    </div><!-- /products-grid -->
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     WHAT'S INSIDE
+══════════════════════════════════════════════════════════════ -->
+<section class="inside" aria-labelledby="inside-title">
+  <div class="container">
+    <div class="inside-grid">
+      <div>
+        <span class="section-label">What's inside every guide</span>
+        <h2 class="section-title" id="inside-title">Not a journal.<br>A prescription.</h2>
+        <div class="inside-list">
+          <div class="inside-item">
+            <div class="inside-icon" aria-hidden="true">📅</div>
+            <div class="inside-item-text">
+              <h4>Structured daily schedule</h4>
+              <p>Exact times, exact actions. Morning, midday, and evening practices matched to your archetype. No guessing.</p>
+            </div>
+          </div>
+          <div class="inside-item">
+            <div class="inside-icon" aria-hidden="true">🚨</div>
+            <div class="inside-item-text">
+              <h4>Emergency protocols</h4>
+              <p>Three laminated-style cards: overwhelm, shutdown, and anxiety spike. Each with a 3-step CBT protocol. Photograph them.</p>
+            </div>
+          </div>
+          <div class="inside-item">
+            <div class="inside-icon" aria-hidden="true">🔧</div>
+            <div class="inside-item-text">
+              <h4>6 matched techniques</h4>
+              <p>Not a list of 40 things you could do. Six specific techniques with exact steps, chosen for your archetype.</p>
+            </div>
+          </div>
+          <div class="inside-item">
+            <div class="inside-icon" aria-hidden="true">🗂️</div>
+            <div class="inside-item-text">
+              <h4>Your pattern card</h4>
+              <p>Your specific loop: trigger → response → action → cost, with an interrupt written at every stage.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="inside-visual" aria-hidden="true">
+        <div class="inside-card">
+          <div class="inside-card-label">Your 4-week arc</div>
+          <div class="inside-weeks">
+            <div class="inside-week">
+              <div class="inside-week-num">Week 1</div>
+              <div class="inside-week-theme" style="color:var(--red)">Acknowledge</div>
+              <div class="inside-week-focus">Name what's happening</div>
+            </div>
+            <div class="inside-week">
+              <div class="inside-week-num">Week 2</div>
+              <div class="inside-week-theme" style="color:var(--teal)">Protect</div>
+              <div class="inside-week-focus">Build the boundary</div>
+            </div>
+            <div class="inside-week">
+              <div class="inside-week-num">Week 3</div>
+              <div class="inside-week-theme" style="color:var(--amber)">Attune</div>
+              <div class="inside-week-focus">Learn your signals</div>
+            </div>
+            <div class="inside-week">
+              <div class="inside-week-num">Week 4</div>
+              <div class="inside-week-theme" style="color:var(--purple)">Sustain</div>
+              <div class="inside-week-focus">Make it automatic</div>
+            </div>
+          </div>
+          <div class="inside-emergency">
+            <div class="inside-emergency-label">Emergency card included</div>
+            <div class="inside-emergency-text">Overwhelm · Shutdown · Anxiety spike — 3-step protocol for each. Designed to cut out or photograph.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SOCIAL PROOF
+══════════════════════════════════════════════════════════════ -->
+<section class="proof" aria-labelledby="proof-title">
+  <div class="container">
+    <div class="proof-header">
+      <span class="section-label">What people are saying</span>
+      <h2 class="section-title" id="proof-title">It described exactly<br>what was wrong with me.</h2>
+    </div>
+    <div class="testimonials">
+      <!-- REPLACE: swap with real testimonials as you collect them -->
+      <div class="testimonial">
+        <div class="testimonial-stars" aria-label="5 stars">
+          <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+        </div>
+        <p class="testimonial-text">"I've taken every personality test out there. This one actually told me something I didn't know about myself. The pattern card alone was worth $14.99."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar" style="background:var(--red)" aria-hidden="true">JM</div>
+          <div>
+            <div class="testimonial-name">J. Martinez</div>
+            <div class="testimonial-handle">Verified purchase</div>
+            <div class="testimonial-archetype" style="color:var(--red)">The Overextended</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial">
+        <div class="testimonial-stars" aria-label="5 stars">
+          <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+        </div>
+        <p class="testimonial-text">"I've been numb for two years and couldn't explain it. This named it in 8 minutes. Week 2 of the guide and I actually cried for the first time in months."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar" style="background:var(--blue)" aria-hidden="true">SK</div>
+          <div>
+            <div class="testimonial-name">S. Kim</div>
+            <div class="testimonial-handle">Verified purchase</div>
+            <div class="testimonial-archetype" style="color:var(--blue)">The Numb One</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial">
+        <div class="testimonial-stars" aria-label="5 stars">
+          <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+        </div>
+        <p class="testimonial-text">"My doctor told me to 'reduce stress'. This guide told me exactly how. The daily schedule removed all the decision fatigue. I just follow it."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar" style="background:var(--purple)" aria-hidden="true">RL</div>
+          <div>
+            <div class="testimonial-name">R. Lee</div>
+            <div class="testimonial-handle">Verified purchase</div>
+            <div class="testimonial-archetype" style="color:var(--purple)">The Exhausted Body</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     FAQ
+══════════════════════════════════════════════════════════════ -->
+<section class="faq" id="faq" aria-labelledby="faq-title">
+  <div class="container">
+    <div class="faq-header">
+      <span class="section-label">Questions</span>
+      <h2 class="section-title" id="faq-title">Straight answers.</h2>
+    </div>
+    <div class="faq-grid">
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
+          Is the assessment really free?
+          <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </button>
+        <div class="faq-a" role="region">Yes. Completely free. No email, no account, no credit card. Takes 8 minutes. The guide is $14.99 — but the assessment is free regardless of whether you buy.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
+          How is this different from other burnout resources?
+          <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </button>
+        <div class="faq-a" role="region">Most burnout advice is generic. "Sleep more. Take breaks. Set boundaries." You already know that. This identifies your specific pattern — the trigger, the response, the loop — and gives you a prescription for that exact pattern. Not one-size-fits-all advice.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
+          What do I get for $14.99?
+          <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </button>
+        <div class="faq-a" role="region">A 15-page PDF personalized to your archetype. Includes: a structured daily schedule with exact times and practices, your pattern card with specific interrupts, 6 techniques matched to your burnout type, emergency protocols for overwhelm, shutdown, and anxiety spikes, and a 4-week tracker. Instant download after purchase.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
+          What if I get the wrong archetype?
+          <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </button>
+        <div class="faq-a" role="region">The assessment shows you all 6 archetype scores so you can see how close the results are. Most people have a clear primary and a secondary. If you're unsure, take the assessment again focusing on the past 2 weeks specifically. You can also buy multiple guides — they use the same format but the content is entirely different per archetype.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
+          Is this therapy or medical advice?
+          <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </button>
+        <div class="faq-a" role="region">No. Self Beacon is a self-help tool based on CBT principles and burnout research. It is not a substitute for therapy or medical treatment. If you are experiencing a mental health crisis, please contact a qualified professional.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
+          Do you have an affiliate or creator program?
+          <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </button>
+        <div class="faq-a" role="region">Yes. We offer 35% commission per sale. If you create content about mental health, burnout, productivity, or wellness — apply below. We send you a unique affiliate link and a creator kit same day you're accepted.</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     FINAL CTA
+══════════════════════════════════════════════════════════════ -->
+<section class="final-cta" aria-labelledby="cta-title">
+  <div class="container">
+    <div class="final-cta-box">
+      <h2 id="cta-title">You're not burnt out<br>because you're weak.</h2>
+      <p>You're burnt out because nothing you tried was built for your specific pattern. Start here.</p>
+      <div class="final-cta-actions">
+        <a href="#assessment" class="btn-primary">
+          <svg viewBox="0 0 16 16" fill="none" aria-hidden="true" style="width:16px;height:16px">
+            <path d="M8 2l6 6-6 6M2 8h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Take the free assessment
+        </a>
+        <a href="#guides" class="btn-ghost">Browse guides</a>
+      </div>
+      <p class="final-cta-note">Free assessment · $14.99 guide · Instant download</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     FOOTER
+══════════════════════════════════════════════════════════════ -->
+<footer class="footer" role="contentinfo">
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <a href="#" class="nav-logo" aria-label="Self Beacon home" style="display:inline-flex">
+          <div class="nav-logo-mark" aria-hidden="true"></div>
+          <span class="nav-logo-name">Self Beacon</span>
+        </a>
+        <p class="footer-brand-desc">A beacon for the self. Burnout assessment tools and personalized recovery guides.</p>
+      </div>
+      <div>
+        <div class="footer-col-title">Guides</div>
+        <ul class="footer-links">
+          <!-- REPLACE each href with your actual Payhip product URLs -->
+          <li><a href="REPLACE_WITH_PAYHIP_EARLY_URL" target="_blank" rel="noopener">The Early Warning Fix</a></li>
+          <li><a href="REPLACE_WITH_PAYHIP_OVEREXTENDED_URL" target="_blank" rel="noopener">The Overextended Fix</a></li>
+          <li><a href="REPLACE_WITH_PAYHIP_NUMB_URL" target="_blank" rel="noopener">The Numb One Fix</a></li>
+          <li><a href="REPLACE_WITH_PAYHIP_EXHAUSTED_URL" target="_blank" rel="noopener">The Exhausted Body Fix</a></li>
+          <li><a href="REPLACE_WITH_PAYHIP_LOST_URL" target="_blank" rel="noopener">The Lost One Fix</a></li>
+          <li><a href="REPLACE_WITH_PAYHIP_PRESSURE_URL" target="_blank" rel="noopener">The Pressure Cooker Fix</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Company</div>
+        <ul class="footer-links">
+          <li><a href="#how-it-works">How it works</a></li>
+          <li><a href="#faq">FAQ</a></li>
+          <!-- REPLACE with your actual affiliate application form URL -->
+          <li><a href="REPLACE_WITH_AFFILIATE_FORM_URL" target="_blank" rel="noopener">Affiliate program</a></li>
+          <!-- REPLACE with your actual contact email -->
+          <li><a href="mailto:REPLACE_WITH_YOUR_EMAIL">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Take the assessment</div>
+        <p style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:14px">Free. 8 minutes. Identifies your burnout archetype.</p>
+        <a href="#assessment" class="btn-primary" style="font-size:13px;padding:10px 18px">Start free →</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copy">© 2025 Self Beacon. All rights reserved.</p>
+      <nav class="footer-legal" aria-label="Legal links">
+        <!-- REPLACE with your actual policy page URLs if you create them -->
+        <a href="#">Privacy policy</a>
+        <a href="#">Terms of use</a>
+        <a href="#">Refund policy</a>
+      </nav>
+    </div>
+  </div>
+</footer>
+
+<!-- ═══════════════════════════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════════════════════════════ -->
+<script>
+  // FAQ accordion
+  function toggleFaq(btn) {
+    const item = btn.closest('.faq-item');
+    const isOpen = item.classList.contains('open');
+    // Close all
+    document.querySelectorAll('.faq-item.open').forEach(el => {
+      el.classList.remove('open');
+      el.querySelector('.faq-q').setAttribute('aria-expanded', 'false');
+    });
+    // Open clicked if it was closed
+    if (!isOpen) {
+      item.classList.add('open');
+      btn.setAttribute('aria-expanded', 'true');
+    }
+  }
+
+  // Mobile menu toggle — simple show/hide of nav links
+  function toggleMobileMenu() {
+    const links = document.querySelector('.nav-links');
+    const isVisible = links.style.display === 'flex';
+    links.style.display = isVisible ? 'none' : 'flex';
+    links.style.flexDirection = 'column';
+    links.style.position = 'absolute';
+    links.style.top = '64px';
+    links.style.left = '0';
+    links.style.right = '0';
+    links.style.background = 'var(--ink)';
+    links.style.borderBottom = '1px solid var(--border)';
+    links.style.padding = '16px 24px 20px';
+    links.style.gap = '14px';
+  }
+
+  // Close mobile menu on link click
+  document.querySelectorAll('.nav-links a').forEach(link => {
+    link.addEventListener('click', () => {
+      const links = document.querySelector('.nav-links');
+      if (window.innerWidth < 600) links.style.display = 'none';
+    });
+  });
+
+  // Smooth scroll offset for fixed nav
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        const offset = 72; // nav height
+        const top = target.getBoundingClientRect().top + window.scrollY - offset;
+        window.scrollTo({ top, behavior: 'smooth' });
+      }
+    });
+  });
+
+  // Animate bars in hero card on load
+  window.addEventListener('load', () => {
+    document.querySelectorAll('.hero-preview-bar-fill').forEach((bar, i) => {
+      const w = bar.style.width;
+      bar.style.width = '0';
+      setTimeout(() => { bar.style.width = w; }, 600 + i * 120);
+    });
+  });
+</script>
+
+</body>
+</html>
