@@ -8,6 +8,11 @@
   <meta property="og:title" content="Self Beacon — Find Your Burnout Archetype">
   <meta property="og:description" content="Free burnout assessment. 6 archetypes. Personalized 30-day guide.">
   <meta property="og:image" content="https://raw.githubusercontent.com/burnoutreset/burnout-reset/main/og_image.png">
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" href="favicon-32x32.png" type="image/png" sizes="32x32">
+  <link rel="icon" href="favicon-16x16.png" type="image/png" sizes="16x16">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
@@ -569,24 +574,20 @@
     }
     .product-footer {
       display: flex; align-items: center;
-      justify-content: space-between;
+      justify-content: center;
       margin-top: 16px;
       padding-top: 14px;
       border-top: 1px solid var(--border);
     }
-    .product-price {
-      font-family: var(--font-display);
-      font-size: 20px;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-    }
     .product-buy {
-      padding: 9px 18px;
+      display: block; width: 100%;
+      padding: 11px 18px;
       border-radius: 8px;
       font-family: var(--font-display);
       font-size: 13px;
       font-weight: 700;
       color: white;
+      text-align: center;
       transition: opacity 0.2s, transform 0.15s;
     }
     .product-buy:hover { opacity: 0.88; transform: translateY(-1px); }
@@ -602,7 +603,6 @@
     .product-card .product-archetype-badge {
       background: var(--acc-bg); color: var(--acc);
     }
-    .product-card .product-price { color: var(--acc); }
     .product-card .product-buy { background: var(--acc); }
 
     /* ── WHAT'S INSIDE ─────────────────────────────────────────────────── */
@@ -883,7 +883,7 @@
     }
     .footer-top {
       display: grid;
-      grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      grid-template-columns: 1.5fr 1fr 1fr;
       gap: 48px;
       margin-bottom: 48px;
     }
@@ -1179,8 +1179,7 @@
           <h3 class="product-title">The Early Warning Fix:</h3>
           <p class="product-subtitle">Your 30-Day Plan to Catch Burnout Early, Build Protection Habits & Stop the Drift Before It Deepens.</p>
           <div class="product-footer">
-            <span class="product-price">$14.99</span>
-            <a href="https://payhip.com/b/St81q" class="product-buy" target="_blank" rel="noopener">Get guide →</a>
+            <a href="#assessment" class="product-buy">Take Assessment to Get Your Guide →</a>
           </div>
         </div>
       </article>
@@ -1195,8 +1194,7 @@
           <h3 class="product-title">The Overextended Fix:</h3>
           <p class="product-subtitle">Your 30-Day Plan to Stop Saying Yes When You Mean No, Reclaim Your Energy & Break the Overcommitment Cycle.</p>
           <div class="product-footer">
-            <span class="product-price">$14.99</span>
-            <a href="https://payhip.com/b/ZSIj1" class="product-buy" target="_blank" rel="noopener">Get guide →</a>
+            <a href="#assessment" class="product-buy">Take Assessment to Get Your Guide →</a>
           </div>
         </div>
       </article>
@@ -1211,8 +1209,7 @@
           <h3 class="product-title">The Numb One Fix:</h3>
           <p class="product-subtitle">Your 30-Day Plan to Feel Again, Reconnect With What Matters & Come Back From Emotional Detachment.</p>
           <div class="product-footer">
-            <span class="product-price">$14.99</span>
-            <a href="https://payhip.com/b/PygEe" class="product-buy" target="_blank" rel="noopener">Get guide →</a>
+            <a href="#assessment" class="product-buy">Take Assessment to Get Your Guide →</a>
           </div>
         </div>
       </article>
@@ -1227,8 +1224,7 @@
           <h3 class="product-title">The Exhausted Body Fix:</h3>
           <p class="product-subtitle">Your 30-Day Plan to Restore Energy, Improve Sleep & Nourish Your Body Back to Life.</p>
           <div class="product-footer">
-            <span class="product-price">$14.99</span>
-            <a href="https://payhip.com/b/Gw0Hq" class="product-buy" target="_blank" rel="noopener">Get guide →</a>
+            <a href="#assessment" class="product-buy">Take Assessment to Get Your Guide →</a>
           </div>
         </div>
       </article>
@@ -1243,8 +1239,7 @@
           <h3 class="product-title">The Lost One Fix:</h3>
           <p class="product-subtitle">Your 30-Day Plan to Rediscover Your Why, Reconnect With Your Values & Find Direction Again.</p>
           <div class="product-footer">
-            <span class="product-price">$14.99</span>
-            <a href="https://payhip.com/b/9zDKn" class="product-buy" target="_blank" rel="noopener">Get guide →</a>
+            <a href="#assessment" class="product-buy">Take Assessment to Get Your Guide →</a>
           </div>
         </div>
       </article>
@@ -1259,8 +1254,7 @@
           <h3 class="product-title">The Pressure Cooker Fix:</h3>
           <p class="product-subtitle">Your 30-Day Plan to Reduce the Load, Stabilise All Four Burnout Dimensions & Start Breathing Again.</p>
           <div class="product-footer">
-            <span class="product-price">$14.99</span>
-            <a href="https://payhip.com/b/2Aa6c" class="product-buy" target="_blank" rel="noopener">Get guide →</a>
+            <a href="#assessment" class="product-buy">Take Assessment to Get Your Guide →</a>
           </div>
         </div>
       </article>
@@ -1498,17 +1492,6 @@
           <span class="nav-logo-name">Self Beacon</span>
         </a>
         <p class="footer-brand-desc">A beacon for the self. Burnout assessment tools and personalized recovery guides.</p>
-      </div>
-      <div>
-        <div class="footer-col-title">Guides</div>
-        <ul class="footer-links">
-          <li><a href="https://payhip.com/b/St81q" target="_blank" rel="noopener">The Early Warning Fix</a></li>
-          <li><a href="https://payhip.com/b/ZSIj1" target="_blank" rel="noopener">The Overextended Fix</a></li>
-          <li><a href="https://payhip.com/b/PygEe" target="_blank" rel="noopener">The Numb One Fix</a></li>
-          <li><a href="https://payhip.com/b/Gw0Hq" target="_blank" rel="noopener">The Exhausted Body Fix</a></li>
-          <li><a href="https://payhip.com/b/9zDKn" target="_blank" rel="noopener">The Lost One Fix</a></li>
-          <li><a href="https://payhip.com/b/2Aa6c" target="_blank" rel="noopener">The Pressure Cooker Fix</a></li>
-        </ul>
       </div>
       <div>
         <div class="footer-col-title">Company</div>
