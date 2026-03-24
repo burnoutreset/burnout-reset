@@ -30,17 +30,17 @@ https://burnoutreset.github.io/burnout-reset
 
 \### Payhip products (update these when created)
 
-\- Early Burnout:    \[PAYHIP URL]
+\- Early Burnout:    https://payhip.com/b/St81q
 
-\- Overextended:     \[PAYHIP URL]
+\- Overextended:     https://payhip.com/b/ZSIj1
 
-\- Numb One:         \[PAYHIP URL]
+\- Numb One:         https://payhip.com/b/PygEe
 
-\- Exhausted Body:   \[PAYHIP URL]
+\- Exhausted Body:   https://payhip.com/b/Gw0Hq
 
-\- Lost One:         \[PAYHIP URL]
+\- Lost One:         https://payhip.com/b/9zDKn
 
-\- Pressure Cooker:  \[PAYHIP URL]
+\- Pressure Cooker:  https://payhip.com/b/2Aa6c
 
 \- All products: $14.99  |  35% affiliate commission
 
