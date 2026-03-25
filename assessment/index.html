@@ -946,6 +946,69 @@
   </style>
 </head>
 <body>
+<script>
+// ── Dynamic affiliate tracking ───────────────────────────────────────
+// Reads ?ref=CREATORNAME from URL, fetches their links from Netlify API,
+// stores in localStorage for 30 days. No hardcoding. No code deploys.
+// To add/remove an affiliate: update AFFILIATE_MAP env var in Netlify.
+
+const NETLIFY_API = 'https://YOUR-NETLIFY-SITE.netlify.app/api/affiliates';
+// REPLACE above with your actual Netlify URL once deployed.
+// Format: https://[your-site-name].netlify.app/api/affiliates
+
+const REF_EXPIRY_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
+
+// ── On page load: check for ?ref= param ─────────────────────────────
+(function initRef(){
+  const params = new URLSearchParams(window.location.search);
+  const ref = (params.get('ref') || '').toLowerCase().trim();
+
+  if (ref) {
+    // Fetch affiliate data from Netlify function
+    fetch(NETLIFY_API + '?ref=' + encodeURIComponent(ref))
+      .then(r => r.json())
+      .then(data => {
+        if (data.found && data.links) {
+          const entry = {
+            ref:     ref,
+            name:    data.name || ref,
+            links:   data.links,
+            expires: Date.now() + REF_EXPIRY_MS,
+          };
+          localStorage.setItem('sb_ref', JSON.stringify(entry));
+        }
+      })
+      .catch(() => {}); // fail silently — fallback to default links
+  }
+
+  // Clean up expired ref
+  const stored = localStorage.getItem('sb_ref');
+  if (stored) {
+    try {
+      const d = JSON.parse(stored);
+      if (Date.now() > d.expires) localStorage.removeItem('sb_ref');
+    } catch(e) { localStorage.removeItem('sb_ref'); }
+  }
+})();
+
+// ── Returns the correct buy URL for this archetype ───────────────────
+// If a valid affiliate ref is stored and has a link for this archetype,
+// returns their affiliate URL. Otherwise returns the default Payhip URL.
+function getAffiliateUrl(archetypeId, fallbackUrl) {
+  try {
+    const stored = localStorage.getItem('sb_ref');
+    if (!stored) return fallbackUrl;
+    const d = JSON.parse(stored);
+    if (Date.now() > d.expires) {
+      localStorage.removeItem('sb_ref');
+      return fallbackUrl;
+    }
+    if (d.links && d.links[archetypeId]) return d.links[archetypeId];
+  } catch(e) {}
+  return fallbackUrl;
+}
+</script>
+
 <div class="app">
 
 <!-- ════════════════════════════════════════════════
@@ -1515,7 +1578,7 @@ function buildResults(){
     <div class="buy-section">
       <div class="buy-title">Get your personalized 30-day guide</div>
       <div class="buy-desc">15 pages built specifically for <strong>${primary.name}</strong>. Structured daily schedule with exact times, emergency protocols for overwhelm and anxiety spikes, 6 matched techniques, and your pattern card with specific interrupts.</div>
-      <a class="buy-btn" href="${PAYHIP_URLS[primary.id]}" target="_blank">
+      <a class="buy-btn" href="${getAffiliateUrl(primary.id, PAYHIP_URLS[primary.id])}" target="_blank" rel="noopener">
         ${primary.name} Guide — $14.99 ↗
       </a>
       <div class="buy-guarantee">
