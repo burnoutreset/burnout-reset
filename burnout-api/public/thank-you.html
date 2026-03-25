@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Thank you — Self Beacon</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family:'DM Sans',sans-serif;
+      background:#090909;color:#fafafa;
+      min-height:100vh;
+      display:flex;align-items:center;justify-content:center;
+      padding:2rem;
+    }
+    .card{
+      background:#111113;
+      border:1px solid rgba(255,255,255,0.08);
+      border-radius:20px;
+      padding:3rem 2.5rem;
+      max-width:480px;width:100%;
+      text-align:center;
+      position:relative;
+      overflow:hidden;
+    }
+    .card::before{
+      content:'';
+      position:absolute;top:0;left:0;right:0;height:2px;
+      background:linear-gradient(90deg,transparent,#E8401C,transparent);
+    }
+
+    /* Icon */
+    .icon-wrap{
+      width:64px;height:64px;
+      border-radius:50%;
+      background:rgba(232,64,28,0.12);
+      display:flex;align-items:center;justify-content:center;
+      margin:0 auto 1.5rem;
+      font-size:1.8rem;
+    }
+
+    /* Heading */
+    h1{
+      font-family:'Syne',sans-serif;
+      font-size:1.6rem;font-weight:800;
+      letter-spacing:-.03em;
+      margin-bottom:.5rem;
+    }
+    .sub{
+      font-size:.92rem;color:#71717a;
+      line-height:1.7;margin-bottom:1.75rem;
+    }
+    .email-highlight{
+      color:#E8401C;font-weight:500;
+    }
+
+    /* Status card */
+    .status-card{
+      background:#161619;
+      border:1px solid rgba(255,255,255,0.07);
+      border-radius:12px;
+      padding:1.1rem 1.25rem;
+      margin-bottom:1.5rem;
+      display:flex;align-items:center;gap:12px;
+      text-align:left;
+    }
+    .status-dot{
+      width:10px;height:10px;border-radius:50%;
+      background:#E8401C;flex-shrink:0;
+      animation:pulse 2s ease infinite;
+    }
+    .status-dot.done{background:#22c55e;animation:none}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+    .status-text{font-size:.85rem;color:#a1a1aa;line-height:1.5}
+    .status-text strong{color:#fafafa;display:block;margin-bottom:1px}
+
+    /* What's next */
+    .steps{
+      text-align:left;
+      margin-bottom:1.75rem;
+    }
+    .steps-label{
+      font-family:'Syne',sans-serif;
+      font-size:.65rem;font-weight:700;
+      letter-spacing:.12em;text-transform:uppercase;
+      color:#52525b;margin-bottom:.75rem;
+    }
+    .step-item{
+      display:flex;gap:12px;align-items:flex-start;
+      margin-bottom:.75rem;
+    }
+    .step-num{
+      width:22px;height:22px;border-radius:50%;
+      background:rgba(232,64,28,0.12);
+      color:#E8401C;
+      font-family:'Syne',sans-serif;
+      font-size:.68rem;font-weight:800;
+      display:flex;align-items:center;justify-content:center;
+      flex-shrink:0;margin-top:1px;
+    }
+    .step-body{}
+    .step-title{font-size:.85rem;font-weight:500;color:#d4d4d8;margin-bottom:1px}
+    .step-desc{font-size:.78rem;color:#71717a;line-height:1.5}
+
+    /* Back link */
+    .back-link{
+      font-size:.8rem;color:#52525b;
+      text-decoration:none;
+      transition:color .18s;
+    }
+    .back-link:hover{color:#a1a1aa}
+
+    /* Error state */
+    .err-box{
+      display:none;
+      background:rgba(239,68,68,0.08);
+      border:1px solid rgba(239,68,68,0.2);
+      border-radius:10px;
+      padding:1rem 1.1rem;
+      margin-bottom:1.25rem;
+      font-size:.82rem;
+      color:#fca5a5;
+      line-height:1.6;
+      text-align:left;
+    }
+  </style>
+</head>
+<body>
+<div class="card">
+
+  <div class="icon-wrap" id="icon">✓</div>
+
+  <h1 id="heading">Payment confirmed.</h1>
+  <p class="sub" id="subtext">
+    We're preparing your personalized guide now.<br>
+    It will arrive in your inbox at <span class="email-highlight" id="email-display">your email</span> within a few minutes.
+  </p>
+
+  <!-- Generation status -->
+  <div class="status-card">
+    <div class="status-dot" id="status-dot"></div>
+    <div class="status-text">
+      <strong id="status-title">Generating your guide</strong>
+      <span id="status-desc">Building 30 days of content personalised to your assessment responses...</span>
+    </div>
+  </div>
+
+  <!-- Error box (shown only if generation fails) -->
+  <div class="err-box" id="err-box">
+    <strong style="color:#fca5a5;display:block;margin-bottom:4px">Something went wrong</strong>
+    Don't worry — your Payhip receipt email includes a copy of your guide as a backup.
+    If you don't see it, email us at <a href="mailto:wecare@selfbeacon.com" style="color:#E8401C">wecare@selfbeacon.com</a> and we'll send it manually within a few hours.
+  </div>
+
+  <!-- What's next -->
+  <div class="steps">
+    <div class="steps-label">While you wait</div>
+    <div class="step-item">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <div class="step-title">Check your inbox in 2–3 minutes</div>
+        <div class="step-desc">Your guide will arrive as a PDF attachment. Check spam if you don't see it.</div>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <div class="step-title">Start with Week 1, Day 1</div>
+        <div class="step-desc">Don't skip ahead. The first week is about acknowledging — it sets everything else up.</div>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <div class="step-title">Bookmark page 3</div>
+        <div class="step-desc">That's your emergency card for overwhelm, shutdown, and anxiety spikes.</div>
+      </div>
+    </div>
+  </div>
+
+  <a href="https://selfbeacon.com" class="back-link">← Back to Self Beacon</a>
+
+</div>
+<script>
+  var params     = new URLSearchParams(window.location.search);
+  var sessionId  = params.get('session')  || '';
+  var email      = params.get('email')    || '';
+  var archetype  = decodeURIComponent(params.get('archetype') || 'Burnout Reset');
+  var buyerName  = decodeURIComponent(params.get('name')      || '');
+
+  // Show buyer's email in the message
+  if (email) {
+    document.getElementById('email-display').textContent = email;
+  }
+
+  // Silently call generate-and-email in background
+  // Buyer sees the thank you page immediately — no waiting
+  (function generateInBackground() {
+    var payload = { sessionId, email, archetype, buyerName };
+
+    fetch('/api/generate-and-email', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify(payload),
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (data.ok) {
+        // Update status to done
+        var dot   = document.getElementById('status-dot');
+        var title = document.getElementById('status-title');
+        var desc  = document.getElementById('status-desc');
+        dot.classList.add('done');
+        title.textContent = 'Guide sent ✓';
+        desc.textContent  = 'Check your inbox — it should arrive any moment.';
+      } else {
+        showError();
+      }
+    })
+    .catch(function() {
+      showError();
+    });
+  })();
+
+  function showError() {
+    document.getElementById('status-card') && (document.querySelector('.status-card').style.display = 'none');
+    document.getElementById('err-box').style.display = 'block';
+  }
+</script>
+</body>
+</html>

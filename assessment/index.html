@@ -1589,12 +1589,17 @@ function buildResults(){
   document.getElementById("results-content").innerHTML=html;
 }
 
-// ── Save full profile to localStorage before Payhip redirect ────────────
-// This preserves the buyer's assessment data so generate.js can
-// personalise the PDF with their specific triggers and emotions.
+// ── Handle buy button ────────────────────────────────────────────────────
+// 1. Saves full assessment profile to Netlify (keyed by session ID)
+// 2. Opens Payhip checkout
+// After payment, Payhip redirects to thank-you.html?session=ID&archetype=X
+// thank-you.html calls generate-and-email which retrieves profile and sends PDF
 function handleBuy(archetypeId) {
-  const arc = ARCHETYPES.find(a => a.id === archetypeId);
+  const arc      = ARCHETYPES.find(a => a.id === archetypeId);
+  const sessionId = 'sb-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8);
+
   const profile = {
+    sessionId,
     archetype:     arc ? arc.name : archetypeId,
     severity:      Object.values(qa).reduce((a,b) => a+b, 0).toString(),
     emotions:      [...selectedEmos].join(', '),
@@ -1603,11 +1608,26 @@ function handleBuy(archetypeId) {
     actions:       (invData.actions      || []).filter(Boolean).join(', '),
     consequences:  (invData.consequences || []).filter(Boolean).join(', '),
     topPainPoints: [...selectedEmos].slice(0, 3).join(', '),
-    expires:       Date.now() + 3600000, // 1 hour — enough time to complete Payhip checkout
   };
-  localStorage.setItem('sb_profile', JSON.stringify(profile));
 
-  // Open Payhip — affiliate tracked if applicable
+  // Save to Netlify Blobs via save-profile function
+  // Fire and forget — if it fails, thank-you.html still works (archetype-only guide)
+  fetch(NETLIFY_API.replace('/api/affiliates', '/api/save-profile'), {
+    method:  'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body:    JSON.stringify(profile),
+  }).catch(() => {}); // silent failure — don't block the purchase
+
+  // Store session ID in localStorage as backup
+  try {
+    localStorage.setItem('sb_session', JSON.stringify({
+      sessionId,
+      archetype: profile.archetype,
+      expires: Date.now() + 3600000,
+    }));
+  } catch(e) {}
+
+  // Go to Payhip — affiliate tracked if applicable
   const url = getAffiliateUrl(archetypeId, PAYHIP_URLS[archetypeId]);
   window.open(url, '_blank');
 }
