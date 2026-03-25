@@ -34,22 +34,33 @@
     <p class="timer" id="timer">This usually takes 20-30 seconds.</p>
     <button class="dl-btn" id="dl-btn">Download my guide</button>
     <div class="err" id="err">
-      Something went wrong. Please email <a href="mailto:wecare@selfbeacon.com" style="color:#E8401C">wecare@selfbeacon.com</a> and we will send your guide within 24 hours.
+      Something went wrong. Please email <a href="/cdn-cgi/l/email-protection#512634323023341122343d37333430323e3f7f323e3c" style="color:#E8401C"><span class="__cf_email__" data-cfemail="0e796b6d6f7c6b4e7d6b62686c6b6f6d6160206d6163">[email&#160;protected]</span></a> and we will send your guide within 24 hours.
     </div>
   </div>
-  <script>
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
     var params = new URLSearchParams(window.location.search);
+    // Read from localStorage first (saved by assessment before Payhip redirect)
+    // Falls back to URL params for direct links
+    var stored = null;
+    try {
+      var raw = localStorage.getItem('sb_profile');
+      if (raw) {
+        var parsed = JSON.parse(raw);
+        if (parsed.expires && Date.now() < parsed.expires) { stored = parsed; }
+        localStorage.removeItem('sb_profile');
+      }
+    } catch(e) {}
+
     var profile = {
-      archetype:     decodeURIComponent(params.get("archetype")    || "The Early Burnout"),
-      severity:      decodeURIComponent(params.get("severity")     || ""),
-      emotions:      decodeURIComponent(params.get("emotions")     || ""),
-      triggers:      decodeURIComponent(params.get("triggers")     || ""),
-      responses:     decodeURIComponent(params.get("responses")    || ""),
-      actions:       decodeURIComponent(params.get("actions")      || ""),
-      consequences:  decodeURIComponent(params.get("consequences") || ""),
-      topPainPoints: decodeURIComponent(params.get("topPainPoints")|| ""),
+      archetype:     (stored && stored.archetype)     || decodeURIComponent(params.get("archetype")     || "The Early Burnout"),
+      severity:      (stored && stored.severity)      || decodeURIComponent(params.get("severity")      || ""),
+      emotions:      (stored && stored.emotions)      || decodeURIComponent(params.get("emotions")      || ""),
+      triggers:      (stored && stored.triggers)      || decodeURIComponent(params.get("triggers")      || ""),
+      responses:     (stored && stored.responses)     || decodeURIComponent(params.get("responses")     || ""),
+      actions:       (stored && stored.actions)       || decodeURIComponent(params.get("actions")       || ""),
+      consequences:  (stored && stored.consequences)  || decodeURIComponent(params.get("consequences")  || ""),
+      topPainPoints: (stored && stored.topPainPoints) || decodeURIComponent(params.get("topPainPoints") || ""),
     };
-    document.getElementById("arc-name").textContent = profile.archetype;
     var pdfBase64 = null;
     var elapsed = 0;
     var timerEl = document.getElementById("timer");
@@ -89,12 +100,3 @@
       btn.onclick = downloadPDF;
       downloadPDF(); // auto-trigger download
     })
-    .catch(function(e){
-      clearInterval(timerInt);
-      document.getElementById("spinner").style.display="none";
-      document.getElementById("err").style.display="block";
-      console.error(e);
-    });
-  </script>
-</body>
-</html>
