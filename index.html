@@ -1135,7 +1135,7 @@
     </div>
     <div class="stat-item">
       <div class="stat-number">$14.99</div>
-      <div class="stat-label">Personalized guide, instant download</div>
+      <div class="stat-label">Personalized guide, delivered by email</div>
     </div>
   </div>
 </section>
@@ -1148,7 +1148,7 @@
     <div class="how-header">
       <span class="section-label">How it works</span>
       <h2 class="section-title" id="how-title">From burnt out to<br>a plan in 12 minutes.</h2>
-      <p class="section-sub">Free assessment. Instant archetype. Personalized guide ready to download.</p>
+      <p class="section-sub">Free assessment. Instant archetype. Personalized guide delivered to your inbox.</p>
     </div>
     <div class="steps">
       <div class="step">
@@ -1170,7 +1170,7 @@
         <div class="step-icon step-icon-3" aria-hidden="true">📋</div>
         <h3 class="step-title">Get your 30-day guide</h3>
         <p class="step-desc">A personalized prescription built for your archetype. Daily schedule, emergency protocols, 6 matched techniques, and your pattern card. $14.99.</p>
-        <span class="step-tag step-tag-price">$14.99 · Instant download</span>
+        <span class="step-tag step-tag-price">$14.99 · Sent to your email</span>
       </div>
     </div>
   </div>
@@ -1472,7 +1472,15 @@
           What do I get for $14.99?
           <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
         </button>
-        <div class="faq-a" role="region">A 15-page PDF personalized to your archetype. Includes: a structured daily schedule with exact times and practices, your pattern card with specific interrupts, 6 techniques matched to your burnout type, emergency protocols for overwhelm, shutdown, and anxiety spikes, and a 4-week tracker. Instant download after purchase.</div>
+        <div class="faq-a" role="region">A 30-day PDF guide personalized to your archetype. Includes: a structured daily schedule with exact times and practices, your pattern card with specific interrupts, 6 techniques matched to your burnout type, and emergency protocols for overwhelm, shutdown, and anxiety spikes. After purchase, your guide is generated from your assessment responses and delivered to your email within a few minutes.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
+          How do I receive my guide?
+          <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </button>
+        <div class="faq-a" role="region">After purchase, your guide is built from your assessment responses and sent as a PDF to the email you used at checkout. It usually arrives within 2&ndash;3 minutes. Check your spam folder if you don&#39;t see it. You&#39;ll also receive a copy from Payhip as a backup.</div>
       </div>
 
       <div class="faq-item">
@@ -1520,7 +1528,7 @@
         </a>
         <a href="#guides" class="btn-ghost">Browse guides</a>
       </div>
-      <p class="final-cta-note">Free assessment · $14.99 guide · Instant download</p>
+      <p class="final-cta-note">Free assessment · $14.99 guide · Delivered by email</p>
     </div>
   </div>
 </section>
@@ -1544,7 +1552,7 @@
           <li><a href="#how-it-works">How it works</a></li>
           <li><a href="#faq">FAQ</a></li>
           <li><a href="/affiliate/" target="_blank" rel="noopener">Affiliate program</a></li>
-          <li><a href="mailto:wecare@selfbeacon.com">Contact</a></li>
+          <li><a href="/cdn-cgi/l/email-protection#512634323023341122343d37333430323e3f7f323e3c">Contact</a></li>
         </ul>
       </div>
       <div>
@@ -1554,7 +1562,7 @@
       </div>
     </div>
     <div class="footer-bottom">
-      <p class="footer-copy">© 2025 Self Beacon. All rights reserved.</p>
+      <p class="footer-copy">© 2026 Self Beacon. All rights reserved.</p>
       <nav class="footer-legal" aria-label="Legal links">
         <!-- REPLACE with your actual policy page URLs if you create them -->
         <a href="/privacy/">Privacy policy</a>
@@ -1568,7 +1576,7 @@
 <!-- ═══════════════════════════════════════════════════════════
      JAVASCRIPT
 ══════════════════════════════════════════════════════════════ -->
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
   // FAQ accordion
   function toggleFaq(btn) {
     const item = btn.closest('.faq-item');
@@ -1625,12 +1633,4 @@
   // Animate bars in hero card on load
   window.addEventListener('load', () => {
     document.querySelectorAll('.hero-preview-bar-fill').forEach((bar, i) => {
-      const w = bar.style.width;
-      bar.style.width = '0';
-      setTimeout(() => { bar.style.width = w; }, 600 + i * 120);
-    });
-  });
-</script>
-
-</body>
-</html>
+      const w = bar.style
