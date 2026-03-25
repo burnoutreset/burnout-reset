@@ -1578,15 +1578,38 @@ function buildResults(){
     <div class="buy-section">
       <div class="buy-title">Get your personalized 30-day guide</div>
       <div class="buy-desc">15 pages built specifically for <strong>${primary.name}</strong>. Structured daily schedule with exact times, emergency protocols for overwhelm and anxiety spikes, 6 matched techniques, and your pattern card with specific interrupts.</div>
-      <a class="buy-btn" href="${getAffiliateUrl(primary.id, PAYHIP_URLS[primary.id])}" target="_blank" rel="noopener">
+      <button class="buy-btn" onclick="handleBuy('${primary.id}')">
         ${primary.name} Guide — $14.99 ↗
-      </a>
+      </button>
       <div class="buy-guarantee">
         ✓ Instant download &nbsp;·&nbsp; ✓ PDF format &nbsp;·&nbsp; ✓ Built for your archetype
       </div>
     </div>`;
 
   document.getElementById("results-content").innerHTML=html;
+}
+
+// ── Save full profile to localStorage before Payhip redirect ────────────
+// This preserves the buyer's assessment data so generate.js can
+// personalise the PDF with their specific triggers and emotions.
+function handleBuy(archetypeId) {
+  const arc = ARCHETYPES.find(a => a.id === archetypeId);
+  const profile = {
+    archetype:     arc ? arc.name : archetypeId,
+    severity:      Object.values(qa).reduce((a,b) => a+b, 0).toString(),
+    emotions:      [...selectedEmos].join(', '),
+    triggers:      (invData.triggers     || []).filter(Boolean).join(', '),
+    responses:     (invData.responses    || []).filter(Boolean).join(', '),
+    actions:       (invData.actions      || []).filter(Boolean).join(', '),
+    consequences:  (invData.consequences || []).filter(Boolean).join(', '),
+    topPainPoints: [...selectedEmos].slice(0, 3).join(', '),
+    expires:       Date.now() + 3600000, // 1 hour — enough time to complete Payhip checkout
+  };
+  localStorage.setItem('sb_profile', JSON.stringify(profile));
+
+  // Open Payhip — affiliate tracked if applicable
+  const url = getAffiliateUrl(archetypeId, PAYHIP_URLS[archetypeId]);
+  window.open(url, '_blank');
 }
 </script>
 </body>
