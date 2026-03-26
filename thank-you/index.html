@@ -210,22 +210,10 @@
 
   // Silently call generate-and-email in background
   // Buyer sees the thank you page immediately — no waiting
-  (function generateInBackground() {
-    var payload = { sessionId, email, archetype, buyerName };
-
-    fetch('https://eoun3trblqpwaa8.m.pipedream.net', {
-      method:  'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify(payload),
-    })
-    .then(function(r) {
-      if (r.status === 202 || r.ok) {
-        // Update status to done
-        var dot   = document.getElementById('status-dot');
-        var title = document.getElementById('status-title');
-        var desc  = document.getElementById('status-desc');
-        dot.classList.add('done');
-        title.textContent = 'Guide is on its way ✓';
-        desc.textContent  = 'Check your inbox in 2–3 minutes. Check spam if you don\'t see it.';
-    .catch(function() {
-      console.log('Guide generation triggered');
+ // Guide is generated via Payhip webhook — no fetch needed
+var dot   = document.getElementById('status-dot');
+var title = document.getElementById('status-title');
+var desc  = document.getElementById('status-desc');
+dot.classList.add('done');
+title.textContent = 'Guide is on its way \u2713';
+desc.textContent  = 'Check your inbox in 2\u20133 minutes. Check spam if you don\'t see it.';
