@@ -952,7 +952,7 @@
 // stores in localStorage for 30 days. No hardcoding. No code deploys.
 // To add/remove an affiliate: update AFFILIATE_MAP env var in Netlify.
 
-const NETLIFY_API = 'https://YOUR-NETLIFY-SITE.netlify.app/api/affiliates';
+const NETLIFY_API = 'https://eo41qr135od3ivr.m.pipedream.net';
 // REPLACE above with your actual Netlify URL once deployed.
 // Format: https://[your-site-name].netlify.app/api/affiliates
 
@@ -1052,7 +1052,7 @@ function getAffiliateUrl(archetypeId, fallbackUrl) {
     </div>
   </div>
 
-  <button class="btn btn-p btn-full" onclick="goTo(2)">Start free assessment</button>
+  <button class="btn btn-p btn-full" onclick="goTo(2)">Start free assessment ↗</button>
 </div>
 
 <!-- ════════════════════════════════════════════════
@@ -1066,7 +1066,7 @@ function getAffiliateUrl(archetypeId, fallbackUrl) {
   <div id="qwrap" style="border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;margin-bottom:.5rem"></div>
   <div class="btn-row">
     <button class="btn" onclick="goTo(1)">← Back</button>
-    <button class="btn btn-p" onclick="submitQuiz()">Next: Your inventory</button>
+    <button class="btn btn-p" onclick="submitQuiz()">Next: Your inventory ↗</button>
   </div>
   <div class="err" id="qerr">Please answer all 10 questions before continuing.</div>
 </div>
@@ -1110,7 +1110,7 @@ function getAffiliateUrl(archetypeId, fallbackUrl) {
 
   <div class="btn-row">
     <button class="btn" onclick="goTo(2)">← Back</button>
-    <button class="btn btn-p" onclick="submitInventory()">Next: Assign weights</button>
+    <button class="btn btn-p" onclick="submitInventory()">Next: Assign weights ↗</button>
   </div>
   <div class="err" id="inverr"></div>
 </div>
@@ -1612,7 +1612,7 @@ function handleBuy(archetypeId) {
 
   // Save to Netlify Blobs via save-profile function
   // Fire and forget — if it fails, thank-you.html still works (archetype-only guide)
-  fetch(NETLIFY_API.replace('/api/affiliates', '/api/save-profile'), {
+  fetch('https://eotdw8n9zygu6bj.m.pipedream.net', {
     method:  'POST',
     headers: { 'Content-Type': 'application/json' },
     body:    JSON.stringify(profile),

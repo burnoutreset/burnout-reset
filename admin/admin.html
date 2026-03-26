@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Self Beacon — Affiliate Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#090909;--panel:#111113;--card:#161619;--border:rgba(255,255,255,0.08);
+  --mid:#71717a;--light:#d4d4d8;--white:#fafafa;
+  --red:#e8401c;--green:#22c55e;--amber:#f59e0b;--blue:#3b82f6;
+  --font-d:'Syne',sans-serif;--font-b:'DM Sans',sans-serif;
+}
+body{background:var(--ink);color:var(--white);font-family:var(--font-b);font-size:14px;-webkit-font-smoothing:antialiased}
+.wrap{max-width:960px;margin:0 auto;padding:2rem 1.25rem 4rem}
+
+/* Login */
+.login{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:2rem}
+.login-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2.5rem;width:100%;max-width:380px;text-align:center}
+.login-title{font-family:var(--font-d);font-size:1.3rem;font-weight:800;margin-bottom:.4rem}
+.login-sub{font-size:.82rem;color:var(--mid);margin-bottom:1.5rem}
+input[type=password],input[type=text],input[type=email],select,textarea{
+  width:100%;padding:10px 12px;background:#0e0e10;border:1px solid var(--border);
+  border-radius:8px;color:var(--white);font-family:var(--font-b);font-size:.88rem;
+  outline:none;transition:border-color .18s;margin-bottom:.75rem}
+input:focus,select:focus,textarea:focus{border-color:rgba(232,64,28,.5)}
+input::placeholder,textarea::placeholder{color:var(--mid);font-style:italic}
+textarea{resize:vertical;min-height:72px}
+select option{background:#1a1a1c}
+label{display:block;font-size:.75rem;font-weight:500;color:var(--mid);margin-bottom:4px;text-align:left}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:5px;padding:9px 18px;border-radius:8px;
+     font-family:var(--font-d);font-size:.8rem;font-weight:700;cursor:pointer;
+     border:1px solid var(--border);background:transparent;color:var(--light);transition:all .18s}
+.btn:hover{border-color:rgba(255,255,255,.22);color:var(--white);background:rgba(255,255,255,.04)}
+.btn-red{background:var(--red);border-color:var(--red);color:white}
+.btn-red:hover{background:#c0340f;border-color:#c0340f;color:white}
+.btn-green{background:rgba(34,197,94,.15);border-color:rgba(34,197,94,.3);color:var(--green)}
+.btn-green:hover{background:rgba(34,197,94,.25);color:var(--green)}
+.btn-sm{padding:5px 12px;font-size:.72rem}
+.btn-full{width:100%;justify-content:center}
+
+/* Nav */
+.top-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+.top-title{font-family:var(--font-d);font-size:1.1rem;font-weight:800;letter-spacing:-.02em}
+.top-sub{font-size:.72rem;color:var(--mid);margin-top:1px}
+
+/* Stats strip */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:2rem}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1rem 1.1rem}
+.stat-n{font-family:var(--font-d);font-size:1.6rem;font-weight:800;letter-spacing:-.03em}
+.stat-l{font-size:.72rem;color:var(--mid);margin-top:2px}
+
+/* Table */
+.table-wrap{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:1.5rem}
+.table-head{display:grid;grid-template-columns:1fr 1fr 1fr 1fr 90px 100px;gap:0;padding:.65rem 1rem;border-bottom:1px solid var(--border);background:var(--panel)}
+.table-head div{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mid)}
+.table-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr 90px 100px;gap:0;padding:.8rem 1rem;border-bottom:1px solid var(--border);align-items:center;transition:background .15s}
+.table-row:last-child{border-bottom:none}
+.table-row:hover{background:rgba(255,255,255,.02)}
+.table-cell{font-size:.82rem;color:var(--light);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding-right:8px}
+.table-cell.name{font-weight:500;color:var(--white)}
+.badge{display:inline-flex;padding:2px 8px;border-radius:20px;font-size:.65rem;font-weight:700;letter-spacing:.06em}
+.badge-green{background:rgba(34,197,94,.12);color:var(--green)}
+.badge-red{background:rgba(239,68,68,.12);color:#f87171}
+.badge-amber{background:rgba(245,158,11,.12);color:var(--amber)}
+.actions-cell{display:flex;gap:5px}
+
+/* Modal */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:100;align-items:center;justify-content:center;padding:1.5rem}
+.modal-bg.open{display:flex}
+.modal{background:var(--card);border:1px solid var(--border);border-radius:16px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto}
+.modal-head{display:flex;align-items:center;justify-content:space-between;padding:1.1rem 1.25rem;border-bottom:1px solid var(--border)}
+.modal-title{font-family:var(--font-d);font-size:.95rem;font-weight:700}
+.modal-close{background:none;border:none;color:var(--mid);cursor:pointer;font-size:1.2rem;line-height:1;padding:2px 6px}
+.modal-close:hover{color:var(--white)}
+.modal-body{padding:1.25rem}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-group{margin-bottom:.9rem}
+.section-label{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mid);margin:1rem 0 .75rem;padding-top:.75rem;border-top:1px solid var(--border)}
+
+/* Email template */
+.email-box{background:#0e0e10;border:1px solid var(--border);border-radius:8px;padding:1rem;font-size:.78rem;color:var(--light);line-height:1.7;white-space:pre-wrap;word-break:break-word;margin-top:.75rem;cursor:text}
+.copy-hint{font-size:.7rem;color:var(--mid);margin-top:.4rem}
+
+/* Toast */
+.toast{position:fixed;bottom:1.5rem;right:1.5rem;padding:10px 16px;border-radius:8px;font-family:var(--font-d);font-size:.78rem;font-weight:600;z-index:200;animation:fadeUp .25s ease;transition:opacity .3s}
+.toast.ok{background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.3);color:var(--green)}
+.toast.err{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.25);color:#f87171}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* Empty state */
+.empty{text-align:center;padding:3rem 1rem;color:var(--mid)}
+.empty-icon{font-size:2rem;margin-bottom:.75rem}
+.empty-text{font-size:.88rem}
+
+/* Loader */
+.loader{display:inline-block;width:16px;height:16px;border:2px solid var(--border);border-top-color:var(--red);border-radius:50%;animation:spin .6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+@media(max-width:700px){
+  .table-head{grid-template-columns:1fr 1fr 80px 90px}
+  .table-row{grid-template-columns:1fr 1fr 80px 90px}
+  .table-head div:nth-child(3),.table-head div:nth-child(4),
+  .table-row .table-cell:nth-child(3),.table-row .table-cell:nth-child(4){display:none}
+  .stats{grid-template-columns:1fr 1fr}
+  .form-row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ LOGIN SCREEN ═════════════════════════════════════════════ -->
+<div id="login-screen" class="login">
+  <div class="login-card">
+    <div style="font-size:1.5rem;margin-bottom:.5rem">🔦</div>
+    <div class="login-title">Self Beacon Admin</div>
+    <div class="login-sub">Affiliate management</div>
+    <label>Admin password</label>
+    <input type="password" id="admin-key" placeholder="Enter admin key..." onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="btn btn-red btn-full" onclick="doLogin()">Sign in →</button>
+    <div id="login-err" style="color:#f87171;font-size:.75rem;margin-top:.5rem;display:none">Incorrect key</div>
+  </div>
+</div>
+
+<!-- ═══ MAIN APP ══════════════════════════════════════════════════ -->
+<div id="app" style="display:none">
+  <div class="wrap">
+
+    <div class="top-bar">
+      <div>
+        <div class="top-title">Affiliate Manager</div>
+        <div class="top-sub">selfbeacon.com — Creator programme</div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button class="btn btn-sm" id="tab-affiliates" onclick="showTab('affiliates')" style="color:var(--white);border-color:rgba(255,255,255,.22)">Affiliates</button>
+        <button class="btn btn-sm" id="tab-deliveries" onclick="showTab('deliveries')">Deliveries</button>
+        <button class="btn btn-red btn-sm" onclick="openAddModal()">+ Add affiliate</button>
+        <button class="btn btn-sm" onclick="doLogout()">Sign out</button>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-n" id="stat-total" style="color:var(--white)">—</div>
+        <div class="stat-l">Total affiliates</div>
+      </div>
+      <div class="stat">
+        <div class="stat-n" id="stat-active" style="color:var(--green)">—</div>
+        <div class="stat-l">Active</div>
+      </div>
+      <div class="stat">
+        <div class="stat-n" id="stat-pending" style="color:var(--amber)">—</div>
+        <div class="stat-l">Pending links</div>
+      </div>
+    </div>
+
+    <!-- Deliveries section (hidden by default) -->
+    <div id="deliveries-section" style="display:none">
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:1.5rem">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:.75rem 1rem;border-bottom:1px solid var(--border);background:var(--panel)">
+          <div style="font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mid)">Recent deliveries</div>
+          <button class="btn btn-sm" onclick="loadDeliveries()">↻ Refresh</button>
+        </div>
+        <div id="deliveries-table"></div>
+      </div>
+    </div>
+
+    <!-- How to add a new affiliate -->
+    <div style="background:var(--card);border:1px solid var(--border);border-left:3px solid var(--red);border-radius:10px;padding:1rem 1.1rem;margin-bottom:1.5rem;font-size:.82rem;line-height:1.65;color:var(--mid)">
+      <strong style="color:var(--white);display:block;margin-bottom:4px">How to approve a new affiliate</strong>
+      1. Creator fills your <strong style="color:var(--light)">affiliate.html</strong> form → you receive their application by email<br>
+      2. Email them your Payhip signup URL: <strong style="color:var(--light)">payhip.com/auth/register/af69c1781851bb8</strong><br>
+      3. They register → go to Payhip → Marketing → Affiliates → Approve them → Add all 6 products at 35%<br>
+      4. Click <strong style="color:var(--light)">View Products</strong> → copy their 6 affiliate links<br>
+      5. Click <strong style="color:var(--red)">+ Add affiliate</strong> above → paste their details and links<br>
+      6. Copy the generated welcome email → send it to them
+    </div>
+
+    <!-- Table -->
+    <div id="table-area">
+      <div style="text-align:center;padding:2rem"><span class="loader"></span></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══ ADD / EDIT MODAL ══════════════════════════════════════════ -->
+<div class="modal-bg" id="modal">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title" id="modal-title">Add affiliate</div>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Full name *</label>
+          <input type="text" id="f-name" placeholder="Sarah Johnson">
+        </div>
+        <div class="form-group">
+          <label>Email *</label>
+          <input type="email" id="f-email" placeholder="sarah@example.com">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Platform</label>
+          <select id="f-platform">
+            <option value="">Select platform</option>
+            <option>TikTok</option>
+            <option>Instagram</option>
+            <option>YouTube</option>
+            <option>Podcast</option>
+            <option>Newsletter</option>
+            <option>Blog</option>
+            <option>X (Twitter)</option>
+            <option>LinkedIn</option>
+            <option>Multiple</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Handle / URL</label>
+          <input type="text" id="f-handle" placeholder="@sarahwellness">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Ref code * <span style="color:var(--mid);font-weight:400">(lowercase, no spaces — this is their link suffix)</span></label>
+        <input type="text" id="f-ref" placeholder="sarahfit" oninput="this.value=this.value.toLowerCase().replace(/[^a-z0-9-]/g,'');updateRefPreview()">
+        <div id="ref-preview" style="font-size:.72rem;color:var(--mid);margin-top:3px"></div>
+      </div>
+
+      <div class="section-label">Payhip affiliate links <span style="color:var(--mid);font-weight:400;text-transform:none;letter-spacing:0">(from Payhip → Affiliates → View Products)</span></div>
+      <div id="links-fields"></div>
+
+      <div id="modal-err" style="color:#f87171;font-size:.75rem;margin:.5rem 0;display:none"></div>
+
+      <div style="display:flex;gap:8px;margin-top:1rem">
+        <button class="btn btn-red" onclick="saveAffiliate()" id="save-btn">Save affiliate</button>
+        <button class="btn" onclick="closeModal()">Cancel</button>
+      </div>
+
+      <!-- Generated welcome email -->
+      <div id="email-section" style="display:none">
+        <div class="section-label">Welcome email — copy and send to creator</div>
+        <div class="email-box" id="email-template"></div>
+        <div class="copy-hint">Click above to select all → Ctrl+A → Ctrl+C to copy</div>
+        <button class="btn btn-green btn-sm" style="margin-top:.5rem" onclick="copyEmail()">Copy email text</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const API = '/api/affiliates';
+let adminKey = '';
+let editingRef = null;
+
+const ARCHETYPE_LABELS = {
+  overextended: 'The Overextended Fix',
+  numb:         'The Numb One Fix',
+  exhausted:    'The Exhausted Body Fix',
+  lost:         'The Lost One Fix',
+  pressure:     'The Pressure Cooker Fix',
+  early:        'The Early Warning Fix',
+};
+
+// ── Auth ────────────────────────────────────────────────────────
+async function doLogin() {
+  const key = document.getElementById('admin-key').value.trim();
+  if (!key) return;
+  // Test the key by calling list
+  const r = await fetch(`${API}?action=list`, { headers:{ 'X-Admin-Key': key } });
+  if (r.ok) {
+    adminKey = key;
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    loadAffiliates();
+  } else {
+    document.getElementById('login-err').style.display = 'block';
+  }
+}
+
+function doLogout() {
+  adminKey = '';
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('admin-key').value = '';
+  document.getElementById('login-err').style.display = 'none';
+}
+
+// ── Load & render table ─────────────────────────────────────────
+async function loadAffiliates() {
+  document.getElementById('table-area').innerHTML = '<div style="text-align:center;padding:2rem"><span class="loader"></span></div>';
+  const r    = await fetch(`${API}?action=list`, { headers:{ 'X-Admin-Key': adminKey } });
+  const data = await r.json();
+  if (!r.ok) { showToast(data.error || 'Failed to load', 'err'); return; }
+  renderTable(data.affiliates || []);
+}
+
+function renderTable(affiliates) {
+  const total   = affiliates.length;
+  const active  = affiliates.filter(a => a.active && a.hasLinks).length;
+  const pending = affiliates.filter(a => !a.hasLinks).length;
+  document.getElementById('stat-total').textContent   = total;
+  document.getElementById('stat-active').textContent  = active;
+  document.getElementById('stat-pending').textContent = pending;
+
+  if (!affiliates.length) {
+    document.getElementById('table-area').innerHTML = `
+      <div class="empty"><div class="empty-icon">🤝</div>
+      <div class="empty-text">No affiliates yet. Add your first creator above.</div></div>`;
+    return;
+  }
+
+  let html = `
+    <div class="table-wrap">
+      <div class="table-head">
+        <div>Name</div><div>Platform / Handle</div>
+        <div>Ref code</div><div>Status</div>
+        <div>Links</div><div>Actions</div>
+      </div>`;
+
+  affiliates.forEach(a => {
+    const statusBadge = a.active && a.hasLinks
+      ? `<span class="badge badge-green">Active</span>`
+      : !a.hasLinks
+        ? `<span class="badge badge-amber">No links</span>`
+        : `<span class="badge badge-red">Paused</span>`;
+
+    html += `
+      <div class="table-row">
+        <div class="table-cell name" title="${a.name}">${a.name}<br><span style="font-size:.72rem;color:var(--mid)">${a.email}</span></div>
+        <div class="table-cell">${a.platform || '—'}<br><span style="font-size:.72rem;color:var(--mid)">${a.handle || '—'}</span></div>
+        <div class="table-cell"><code style="background:rgba(255,255,255,.06);padding:2px 7px;border-radius:4px;font-size:.72rem">${a.ref}</code></div>
+        <div class="table-cell">${statusBadge}</div>
+        <div class="table-cell">${a.hasLinks ? '✓ All 6' : '✗ Missing'}</div>
+        <div class="actions-cell">
+          <button class="btn btn-sm" onclick="openEditModal('${a.ref}')" title="Edit">✎</button>
+          <button class="btn btn-sm" onclick="toggleAffiliate('${a.ref}')" title="${a.active?'Pause':'Activate'}">${a.active?'⏸':'▶'}</button>
+          <button class="btn btn-sm" onclick="deleteAffiliate('${a.ref}','${a.name}')" title="Delete" style="color:#f87171">✕</button>
+        </div>
+      </div>`;
+  });
+
+  html += '</div>';
+  document.getElementById('table-area').innerHTML = html;
+}
+
+// ── Modal ───────────────────────────────────────────────────────
+function buildLinksFields(existingLinks = {}) {
+  let html = '';
+  Object.entries(ARCHETYPE_LABELS).forEach(([id, label]) => {
+    html += `
+      <div class="form-group">
+        <label>${label}</label>
+        <input type="text" id="link-${id}" placeholder="https://payhip.com/b/XXXXX/THEIRCODE" value="${existingLinks[id]||''}">
+      </div>`;
+  });
+  document.getElementById('links-fields').innerHTML = html;
+}
+
+function updateRefPreview() {
+  const val = document.getElementById('f-ref').value;
+  const p   = document.getElementById('ref-preview');
+  p.textContent = val ? `Share link: selfbeacon.com?ref=${val}` : '';
+}
+
+function openAddModal() {
+  editingRef = null;
+  document.getElementById('modal-title').textContent = 'Add affiliate';
+  document.getElementById('f-name').value    = '';
+  document.getElementById('f-email').value   = '';
+  document.getElementById('f-platform').value= '';
+  document.getElementById('f-handle').value  = '';
+  document.getElementById('f-ref').value     = '';
+  document.getElementById('ref-preview').textContent = '';
+  document.getElementById('modal-err').style.display = 'none';
+  document.getElementById('email-section').style.display = 'none';
+  buildLinksFields();
+  document.getElementById('modal').classList.add('open');
+}
+
+async function openEditModal(ref) {
+  editingRef = ref;
+  document.getElementById('modal-title').textContent = 'Edit affiliate';
+  document.getElementById('modal-err').style.display = 'none';
+  document.getElementById('email-section').style.display = 'none';
+  document.getElementById('modal').classList.add('open');
+
+  // Fetch full data
+  const r    = await fetch(`${API}?action=list`, { headers:{ 'X-Admin-Key': adminKey } });
+  const data = await r.json();
+  const aff  = (data.affiliates||[]).find(a => a.ref === ref);
+  if (!aff) return;
+
+  // We need the full links — fetch via public endpoint to get them
+  const lr    = await fetch(`${API}?ref=${ref}`);
+  const ldata = await lr.json();
+
+  document.getElementById('f-name').value     = aff.name;
+  document.getElementById('f-email').value    = aff.email;
+  document.getElementById('f-platform').value = aff.platform || '';
+  document.getElementById('f-handle').value   = aff.handle   || '';
+  document.getElementById('f-ref').value      = ref;
+  document.getElementById('f-ref').readOnly   = true; // can't change ref after creation
+  document.getElementById('ref-preview').textContent = `Share link: selfbeacon.com?ref=${ref}`;
+  buildLinksFields(ldata.links || {});
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+  document.getElementById('f-ref').readOnly = false;
+  editingRef = null;
+}
+
+// ── Save ────────────────────────────────────────────────────────
+async function saveAffiliate() {
+  const name     = document.getElementById('f-name').value.trim();
+  const email    = document.getElementById('f-email').value.trim();
+  const platform = document.getElementById('f-platform').value;
+  const handle   = document.getElementById('f-handle').value.trim();
+  const ref      = document.getElementById('f-ref').value.trim().toLowerCase();
+  const errEl    = document.getElementById('modal-err');
+
+  errEl.style.display = 'none';
+
+  if (!name || !email || !ref) {
+    errEl.textContent = 'Name, email, and ref code are required.';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  // Collect links
+  const links = {};
+  let allFilled = true;
+  Object.keys(ARCHETYPE_LABELS).forEach(id => {
+    const val = document.getElementById('link-'+id)?.value.trim();
+    if (val) links[id] = val;
+    else allFilled = false;
+  });
+
+  const btn = document.getElementById('save-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="loader"></span> Saving...';
+
+  const payload = { ref, name, email, platform, handle, active: true };
+  if (Object.keys(links).length > 0) payload.links = links;
+
+  const r    = await fetch(`${API}?action=save`, {
+    method: 'POST',
+    headers: { 'Content-Type':'application/json', 'X-Admin-Key': adminKey },
+    body: JSON.stringify(payload),
+  });
+  const data = await r.json();
+
+  btn.disabled = false;
+  btn.textContent = 'Save affiliate';
+
+  if (!r.ok || !data.success) {
+    errEl.textContent = data.error || 'Save failed.';
+    errEl.style.display = 'block';
+
+    // If auto-save failed, show manual update instructions
+    if (data.manualValue) {
+      errEl.textContent += ' Copy the value below and paste into Netlify env var AFFILIATE_MAP:';
+      const pre = document.createElement('textarea');
+      pre.value = data.manualValue;
+      pre.style.cssText = 'width:100%;height:80px;margin-top:6px;font-size:.7rem;background:#0e0e10;color:#d4d4d8;border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:8px';
+      errEl.appendChild(pre);
+    }
+    return;
+  }
+
+  showToast(data.message, 'ok');
+  loadAffiliates();
+
+  // Show generated welcome email
+  if (allFilled) {
+    showWelcomeEmail(name, email, ref, platform, handle);
+  } else {
+    // Links not yet added — show partial success message
+    document.getElementById('email-section').style.display = 'none';
+    showToast('Saved. Add Payhip links once creator registers.', 'ok');
+  }
+}
+
+function showWelcomeEmail(name, email, ref, platform, handle) {
+  const firstName = name.split(' ')[0];
+  const shareLink = `https://selfbeacon.com?ref=${ref}`;
+  const emailText =
+`To: ${email}
+Subject: You're approved — your Self Beacon affiliate link
+
+Hi ${firstName},
+
+You're approved for the Self Beacon affiliate programme.
+
+Here's everything you need:
+
+YOUR LINK
+${shareLink}
+
+Share this link everywhere — YouTube description, TikTok bio, Instagram link-in-bio, podcast show notes. It works on any platform.
+
+When someone clicks your link, takes the free assessment, and buys a guide, you earn 35% ($5.24 per sale). The cookie lasts 30 days.
+
+HOW IT WORKS
+1. Visitor clicks your link → lands on selfbeacon.com
+2. Takes the free 8-minute burnout assessment
+3. Gets their archetype result
+4. Buys their personalised 30-day guide ($14.99)
+5. You earn 35% — tracked automatically
+
+GETTING PAID
+Commissions are paid monthly via PayPal by the 5th of each month.
+Make sure your PayPal email is set in your Payhip affiliate dashboard.
+
+YOUR PAYHIP AFFILIATE DASHBOARD
+Login at payhip.com to see your clicks, sales, and commissions.
+
+CONTENT IDEAS
+- "I took this burnout assessment and here's what it said about me..."
+- "The burnout type no one talks about..." (use your own archetype)
+- "If you've been feeling [emotion] lately, take this free test..."
+- Direct link to free assessment: https://selfbeacon.com/assessment/
+
+Any questions? Reply to this email.
+
+— Self Beacon
+wecare@selfbeacon.com`;
+
+  document.getElementById('email-template').textContent = emailText;
+  document.getElementById('email-section').style.display = 'block';
+  document.getElementById('email-template').scrollIntoView({ behavior:'smooth', block:'nearest' });
+}
+
+function copyEmail() {
+  const text = document.getElementById('email-template').textContent;
+  navigator.clipboard.writeText(text).then(() => showToast('Email copied to clipboard', 'ok'));
+}
+
+// ── Toggle / Delete ─────────────────────────────────────────────
+async function toggleAffiliate(ref) {
+  const r    = await fetch(`${API}?action=toggle`, {
+    method: 'POST',
+    headers: { 'Content-Type':'application/json', 'X-Admin-Key': adminKey },
+    body: JSON.stringify({ ref }),
+  });
+  const data = await r.json();
+  if (data.success) {
+    showToast(data.active ? 'Activated' : 'Paused', 'ok');
+    loadAffiliates();
+  } else {
+    showToast(data.error || 'Failed', 'err');
+  }
+}
+
+async function deleteAffiliate(ref, name) {
+  if (!confirm(`Remove ${name}? Their link selfbeacon.com?ref=${ref} will stop working immediately.`)) return;
+  const r    = await fetch(`${API}?action=delete`, {
+    method: 'POST',
+    headers: { 'Content-Type':'application/json', 'X-Admin-Key': adminKey },
+    body: JSON.stringify({ ref }),
+  });
+  const data = await r.json();
+  showToast(data.message || (r.ok ? 'Removed' : 'Failed'), r.ok ? 'ok' : 'err');
+  if (r.ok) loadAffiliates();
+}
+
+// ── Toast ───────────────────────────────────────────────────────
+function showToast(msg, type = 'ok') {
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, 3000);
+}
+
+// ── Close modal on background click ─────────────────────────────
+document.getElementById('modal').addEventListener('click', e => {
+  if (e.target === document.getElementById('modal')) closeModal();
+});
+
+// ── Tab switching ────────────────────────────────────────────────
+function showTab(tab) {
+  const isAff = tab === 'affiliates';
+  document.getElementById('table-area').style.display        = isAff ? 'block' : 'none';
+  document.getElementById('deliveries-section').style.display= isAff ? 'none'  : 'block';
+  document.querySelector('[onclick*="how to"]') && null;
+  // Highlight active tab
+  document.getElementById('tab-affiliates').style.color = isAff ? 'var(--white)' : '';
+  document.getElementById('tab-affiliates').style.borderColor = isAff ? 'rgba(255,255,255,.22)' : '';
+  document.getElementById('tab-deliveries').style.color = !isAff ? 'var(--white)' : '';
+  document.getElementById('tab-deliveries').style.borderColor = !isAff ? 'rgba(255,255,255,.22)' : '';
+  if (!isAff) loadDeliveries();
+}
+
+// ── Load deliveries ──────────────────────────────────────────────
+async function loadDeliveries() {
+  const el = document.getElementById('deliveries-table');
+  el.innerHTML = '<div style="text-align:center;padding:2rem"><span class="loader"></span></div>';
+  try {
+    const r    = await fetch(`${API}?action=deliveries`, { headers:{ 'X-Admin-Key': adminKey } });
+    const data = await r.json();
+    if (!r.ok) { showToast(data.error || 'Failed to load', 'err'); return; }
+    renderDeliveries(data.deliveries || []);
+  } catch(e) {
+    el.innerHTML = '<div class="empty"><div class="empty-text">Could not load deliveries. Check Netlify Blobs is configured.</div></div>';
+  }
+}
+
+function renderDeliveries(deliveries) {
+  const el = document.getElementById('deliveries-table');
+  if (!deliveries.length) {
+    el.innerHTML = '<div class="empty"><div class="empty-icon">📬</div><div class="empty-text">No deliveries yet. They appear here after the first purchase.</div></div>';
+    return;
+  }
+  let html = `<div style="overflow-x:auto">
+    <div style="display:grid;grid-template-columns:1.5fr 1.5fr 1fr 80px;gap:0;padding:.65rem 1rem;border-bottom:1px solid var(--border);background:var(--panel)">
+      <div style="font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mid)">Email</div>
+      <div style="font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mid)">Archetype</div>
+      <div style="font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mid)">Time</div>
+      <div style="font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mid)">Status</div>
+    </div>`;
+  deliveries.forEach(d => {
+    const time = d.timestamp ? new Date(d.timestamp).toLocaleString() : '—';
+    const badge = d.status === 'sent'
+      ? '<span class="badge badge-green">Sent</span>'
+      : '<span class="badge badge-red">Failed</span>';
+    const errorNote = d.error ? `<div style="font-size:.68rem;color:#f87171;margin-top:2px">${d.error}</div>` : '';
+    html += `<div style="display:grid;grid-template-columns:1.5fr 1.5fr 1fr 80px;gap:0;padding:.8rem 1rem;border-bottom:1px solid var(--border);align-items:start">
+      <div style="font-size:.82rem;color:var(--light);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding-right:8px">${d.email}</div>
+      <div style="font-size:.82rem;color:var(--light);padding-right:8px">${d.archetype}</div>
+      <div style="font-size:.75rem;color:var(--mid)">${time}</div>
+      <div>${badge}${errorNote}</div>
+    </div>`;
+  });
+  html += '</div>';
+  el.innerHTML = html;
+}
+</script>
+</body>
+</html>
