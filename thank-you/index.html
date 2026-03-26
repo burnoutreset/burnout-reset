@@ -183,11 +183,25 @@
 
 </div>
 <script>
-  var params     = new URLSearchParams(window.location.search);
-  var sessionId  = params.get('session')  || '';
-  var email      = params.get('email')    || '';
-  var archetype  = decodeURIComponent(params.get('archetype') || 'Burnout Reset');
-  var buyerName  = decodeURIComponent(params.get('name')      || '');
+  var params    = new URLSearchParams(window.location.search);
+  var archetype = decodeURIComponent(params.get('archetype') || 'Burnout Reset');
+  var email     = params.get('email') || '';
+  var buyerName = decodeURIComponent(params.get('name') || '');
+
+  // Get sessionId from localStorage (saved by assessment before Payhip redirect)
+  var sessionId = '';
+  try {
+    var stored = localStorage.getItem('sb_session');
+    if (stored) {
+      var s = JSON.parse(stored);
+      if (s.expires && Date.now() < s.expires) {
+        sessionId = s.sessionId || '';
+      }
+      localStorage.removeItem('sb_session');
+    }
+  } catch(e) {}
+  // Also check URL param as fallback
+  if (!sessionId) sessionId = params.get('session') || '';
 
   // Show buyer's email in the message
   if (email) {
