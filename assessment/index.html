@@ -1613,7 +1613,7 @@ function handleBuy(archetypeId) {
   .then(r => r.json())
   .then(data => {
     if (data.url) {
-      window.location.href = data.url; // redirect to Stripe checkout
+      window.top.location.href = data.url; // redirect to Stripe checkout
     } else {
       console.error('No checkout URL:', data);
       if (btn) { btn.textContent = arc.name + ' Guide — $14.99 ↗'; btn.disabled = false; }
