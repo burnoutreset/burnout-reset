@@ -952,7 +952,7 @@
 // stores in localStorage for 30 days. No hardcoding. No code deploys.
 // To add/remove an affiliate: update AFFILIATE_MAP env var in Netlify.
 
-const NETLIFY_API = 'https://eo41qr135od3ivr.m.pipedream.net';
+const NETLIFY_API = 'https://YOUR-NETLIFY-SITE.netlify.app/api/affiliates';
 // REPLACE above with your actual Netlify URL once deployed.
 // Format: https://[your-site-name].netlify.app/api/affiliates
 
@@ -1579,7 +1579,7 @@ function buildResults(){
       <div class="buy-title">Get your personalized 30-day guide</div>
       <div class="buy-desc">15 pages built specifically for <strong>${primary.name}</strong>. Structured daily schedule with exact times, emergency protocols for overwhelm and anxiety spikes, 6 matched techniques, and your pattern card with specific interrupts.</div>
       <button class="buy-btn" onclick="handleBuy('${primary.id}')">
-        ${primary.name} Guide — $14.99 ↗
+        Get Your 30-Day Guide — $14.99 ↗
       </button>
       <div class="buy-guarantee">
         ✓ Instant download &nbsp;·&nbsp; ✓ PDF format &nbsp;·&nbsp; ✓ Built for your archetype
@@ -1590,12 +1590,13 @@ function buildResults(){
 }
 
 // ── Handle buy button ────────────────────────────────────────────────────
-// 1. Saves full assessment profile to Netlify (keyed by session ID)
-// 2. Opens Payhip checkout
-// After payment, Payhip redirects to thank-you.html?session=ID&archetype=X
-// thank-you.html calls generate-and-email which retrieves profile and sends PDF
+// 1. POSTs full assessment profile + sessionId to stripe-create-and-save
+// 2. stripe-create-and-save saves profile and creates Stripe Checkout session
+// 3. Browser redirects to Stripe checkout
+// After payment, Stripe redirects to selfbeacon.com/thank-you/
+// Stripe webhook fires → loads profile → Claude generates PDF → emails buyer
 function handleBuy(archetypeId) {
-  const arc      = ARCHETYPES.find(a => a.id === archetypeId);
+  const arc       = ARCHETYPES.find(a => a.id === archetypeId);
   const sessionId = 'sb-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8);
 
   const profile = {
@@ -1610,26 +1611,35 @@ function handleBuy(archetypeId) {
     topPainPoints: [...selectedEmos].slice(0, 3).join(', '),
   };
 
-  // Save to Netlify Blobs via save-profile function
-  // Fire and forget — if it fails, thank-you.html still works (archetype-only guide)
-  fetch('https://eotdw8n9zygu6bj.m.pipedream.net', {
+  // Track affiliate ref if present
+  const affiliateUrl = getAffiliateUrl(archetypeId, null);
+  if (affiliateUrl) profile.affiliateRef = affiliateUrl;
+
+  // Show loading state on button
+  const btn = document.querySelector('.buy-btn');
+  if (btn) { btn.textContent = 'Preparing checkout...'; btn.disabled = true; }
+
+  // Call stripe-create-and-save — saves profile + creates Stripe session
+  fetch(CHECKOUT_API, {
     method:  'POST',
     headers: { 'Content-Type': 'application/json' },
     body:    JSON.stringify(profile),
-  }).catch(() => {}); // silent failure — don't block the purchase
-
-  // Store session ID in localStorage as backup
-  try {
-    localStorage.setItem('sb_session', JSON.stringify({
-      sessionId,
-      archetype: profile.archetype,
-      expires: Date.now() + 3600000,
-    }));
-  } catch(e) {}
-
-  // Go to Payhip — affiliate tracked if applicable
-  const url = getAffiliateUrl(archetypeId, PAYHIP_URLS[archetypeId]);
-  window.open(url, '_blank');
+  })
+  .then(r => r.json())
+  .then(data => {
+    if (data.url) {
+      window.location.href = data.url; // redirect to Stripe checkout
+    } else {
+      console.error('No checkout URL:', data);
+      if (btn) { btn.textContent = arc.name + ' Guide — $14.99 ↗'; btn.disabled = false; }
+      alert('Something went wrong. Please try again.');
+    }
+  })
+  .catch(e => {
+    console.error('Checkout error:', e);
+    if (btn) { btn.textContent = arc.name + ' Guide — $14.99 ↗'; btn.disabled = false; }
+    alert('Something went wrong. Please try again.');
+  });
 }
 </script>
 </body>
