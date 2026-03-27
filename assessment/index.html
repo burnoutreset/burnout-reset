@@ -991,21 +991,15 @@ const REF_EXPIRY_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
   }
 })();
 
-// ── Returns the correct buy URL for this archetype ───────────────────
-// If a valid affiliate ref is stored and has a link for this archetype,
-// returns their affiliate URL. Otherwise returns the default Payhip URL.
-function getAffiliateUrl(archetypeId, fallbackUrl) {
+// ── Returns affiliate ref code if present (for tracking only) ────────
+function getAffiliateRef() {
   try {
     const stored = localStorage.getItem('sb_ref');
-    if (!stored) return fallbackUrl;
+    if (!stored) return null;
     const d = JSON.parse(stored);
-    if (Date.now() > d.expires) {
-      localStorage.removeItem('sb_ref');
-      return fallbackUrl;
-    }
-    if (d.links && d.links[archetypeId]) return d.links[archetypeId];
-  } catch(e) {}
-  return fallbackUrl;
+    if (Date.now() > d.expires) { localStorage.removeItem('sb_ref'); return null; }
+    return d.ref || null;
+  } catch(e) { return null; }
 }
 </script>
 
@@ -1185,14 +1179,7 @@ const DIMS=[
   {key:"overload",label:"Overwhelm",short:"Overwhelm",color:"#0D7377",max:10},
   {key:"purpose",label:"Lost purpose",short:"Lost purpose",color:"#A855F7",max:10},
 ];
-const PAYHIP_URLS={
-  overextended:"https://payhip.com/b/ZSIj1",
-  numb:"https://payhip.com/b/PygEe",
-  exhausted:"https://payhip.com/b/Gw0Hq",
-  lost:"https://payhip.com/b/9zDKn",
-  pressure:"https://payhip.com/b/2Aa6c",
-  early:"https://payhip.com/b/St81q",
-};
+// Payhip removed — using Stripe checkout
 const ARCHETYPES=[
   {id:"overextended",name:"The Overextended",tagline:"Doing too much for too long",color:"#E8401C",
    desc:"Chronic overcommitment. Says yes when they mean no. High-functioning outside, drowning inside.",
@@ -1612,8 +1599,8 @@ function handleBuy(archetypeId) {
   };
 
   // Track affiliate ref if present
-  const affiliateUrl = getAffiliateUrl(archetypeId, null);
-  if (affiliateUrl) profile.affiliateRef = affiliateUrl;
+  const affiliateRef = getAffiliateRef();
+  if (affiliateRef) profile.affiliateRef = affiliateRef;
 
   // Show loading state on button
   const btn = document.querySelector('.buy-btn');
