@@ -948,14 +948,12 @@
 <body>
 <script>
 // ── Dynamic affiliate tracking ───────────────────────────────────────
-// Reads ?ref=CREATORNAME from URL, fetches their links from Netlify API,
+// Reads ?ref=CREATORNAME from URL, fetches their links from AFFILIATES API,
 // stores in localStorage for 30 days. No hardcoding. No code deploys.
-// To add/remove an affiliate: update AFFILIATE_MAP env var in Netlify.
+// To add/remove an affiliate: update AFFILIATE_MAP env var in AFFILIATES.
 
-const NETLIFY_API = 'https://YOUR-NETLIFY-SITE.netlify.app/api/affiliates';
-// REPLACE above with your actual Netlify URL once deployed.
-// Format: https://[your-site-name].netlify.app/api/affiliates
-
+const AFFILIATES_API   = 'https://eo41qr135od3ivr.m.pipedream.net'; // affiliates
+const CHECKOUT_API  = 'https://eomdczbajqiwrl.m.pipedream.net'; // stripe-create-and-save
 const REF_EXPIRY_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
 
 // ── On page load: check for ?ref= param ─────────────────────────────
@@ -964,8 +962,8 @@ const REF_EXPIRY_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
   const ref = (params.get('ref') || '').toLowerCase().trim();
 
   if (ref) {
-    // Fetch affiliate data from Netlify function
-    fetch(NETLIFY_API + '?ref=' + encodeURIComponent(ref))
+    // Fetch affiliate data from AFFILIATES function
+    fetch(AFFILIATES_API + '?ref=' + encodeURIComponent(ref))
       .then(r => r.json())
       .then(data => {
         if (data.found && data.links) {
